@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hkjang.github.io/nextRole/sitemap.xml

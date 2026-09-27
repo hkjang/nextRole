@@ -13,7 +13,7 @@ NextRole은 경력·보유 역량에서 목표 직무의 부족 역량과 점수
 | 사용자 가이드 | [보기](docs/user-guide.md) | [보기](https://hkjang.github.io/nextRole/user-guide.html) | [다운로드](https://hkjang.github.io/nextRole/user-guide.pdf) |
 | 관리자 가이드 | [보기](docs/admin-guide.md) | [보기](https://hkjang.github.io/nextRole/admin-guide.html) | [다운로드](https://hkjang.github.io/nextRole/admin-guide.pdf) |
 
-[전체 화면 캡처](https://hkjang.github.io/nextRole/screenshots/) · [시장 데이터 집계 기준](docs/market-data.md)
+[전체 화면 캡처](https://hkjang.github.io/nextRole/screenshots/) · [시장 데이터 집계 기준](docs/market-data.md) · [검증 기록](docs/verification.md)
 
 [홍보 영상 보기·다운로드](https://hkjang.github.io/nextRole/#video) · [한국어 영상 대본](docs/promo-script.md)
 

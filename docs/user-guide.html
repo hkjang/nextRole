@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>사용자 가이드 | NextRole</title><meta name="description" content="NextRole 경력 입력·이력서 분석·직무 비교·What-if 시뮬레이션·로드맵·개인 키의 상세 이미지 가이드입니다."><link rel="canonical" href="https://hkjang.github.io/nextRole/user-guide.html"><link rel="icon" type="image/svg+xml" href="assets/logo.svg"><meta name="theme-color" content="#136e63"><link rel="stylesheet" href="assets/fonts.css"><style>
+:root{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;color:#203e36;background:#f5f7f2;font-size:17px;line-height:1.85;font-synthesis:none}*{box-sizing:border-box}body{margin:0;word-break:keep-all;overflow-wrap:anywhere}header{max-width:1170px;margin:auto;padding:30px 40px;display:flex;align-items:center;justify-content:space-between;gap:20px}header>a{display:flex;align-items:center;gap:11px;font-size:25px;font-weight:800;text-decoration:none;color:#136e63}header img{width:38px;height:38px}nav{display:flex;gap:22px;font-size:14px}nav a{color:#476c58}main{max-width:1090px;margin:0 auto 60px;padding:55px 65px;background:white;border:1px solid #e0e8dd;border-radius:20px;box-shadow:0 12px 40px #23473106}h1,h2,h3{line-height:1.4;letter-spacing:-.045em;color:#173e36;scroll-margin-top:25px}h1{font-size:39px;margin-top:0}h2{font-size:29px;border-top:1px solid #dce6da;padding-top:38px;margin-top:55px}h3{font-size:22px;margin-top:35px}p{margin:16px 0}a{color:#136e63;text-underline-offset:4px}a:hover{color:#093e36}li{margin:8px 0}li>p{margin:0}table{display:block;width:100%;border-collapse:collapse;overflow-x:auto;margin:25px 0;font-size:15px;line-height:1.7}thead{background:#edf3e9}th,td{text-align:left;vertical-align:top;padding:12px 15px;border:1px solid #dae4d8}th{font-weight:700;white-space:nowrap}tr:nth-child(even){background:#fafcf8}code{font-family:'SFMono-Regular',Consolas,monospace;font-size:.86em;color:#14584d;background:#eef4eb;padding:2px 5px;border-radius:4px;word-break:break-word}pre{background:#163b33;color:#eff7e8;padding:24px;overflow:auto;border-radius:12px;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word}pre code{padding:0;background:transparent;color:inherit;font-size:inherit}img{max-width:100%;height:auto;border:1px solid #dce6da;border-radius:12px;box-shadow:0 9px 28px #173e3608}header img{border:0;box-shadow:none}.toc{padding:24px 30px;background:#f3f7ef;border:1px solid #e0e8d9;border-radius:13px;margin:35px 0}.toctitle{font-size:20px;font-weight:700}.toc ul{list-style:none;padding-left:0;margin:10px 0}.toc li{margin:7px 0;font-size:15px}.toc li ul{padding-left:22px}.toc a{text-decoration:none}blockquote{margin:24px 0;border-left:4px solid #91ba80;padding:2px 22px;background:#f5f8f1;color:#526b56}footer{text-align:center;font-size:13px;color:#68816a;padding:0 25px 35px}::selection{background:#d4ecb5}:focus-visible{outline:3px solid #619a82;outline-offset:4px}@media(max-width:800px){header{padding:24px;align-items:flex-start}nav{flex-wrap:wrap;justify-content:flex-end;gap:8px 15px;font-size:12px}main{margin:0 12px 35px;padding:30px 23px;border-radius:15px}h1{font-size:31px}h2{font-size:25px}h3{font-size:21px}table{font-size:14px}th,td{padding:10px}pre{padding:18px;font-size:12px}.toc{padding:20px}header>a{font-size:22px}}@page{size:A4;margin:17mm 16mm 19mm}@media print{:root{background:white;font-size:10.5pt;line-height:1.65}body{background:white}header{padding:0 0 9mm;max-width:none;border-bottom:1px solid #dce6da}header>a{font-size:20pt}header img{width:30px;height:30px}nav{display:none}main{max-width:none;margin:0;padding:10mm 0 0;border:0;box-shadow:none;border-radius:0}h1{font-size:25pt}h2{font-size:19pt;margin-top:10mm;padding-top:7mm;break-before:page}h3{font-size:14pt;margin-top:7mm}h1,h2,h3{break-after:avoid}p,li{orphans:3;widows:3}table{display:table;font-size:9pt;overflow:visible;table-layout:auto;word-break:break-word}thead{display:table-header-group}tr{break-inside:avoid}th,td{padding:7px 9px}th{white-space:normal}pre{font-size:8pt;border:1px solid #cddccb;color:#1b3c32;background:#f1f6ed;box-shadow:none;break-inside:avoid}code{font-size:.84em}img{max-height:210mm;object-fit:contain;display:block;margin:auto;break-inside:avoid;box-shadow:none}.toc{break-after:page;font-size:10pt}.toc li{font-size:10pt}.toc ul ul{display:none}footer{padding-top:8mm;font-size:8pt}a{color:#136e63}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+.doc-capture{margin:25px 0}.capture-caption{font-size:12px;text-align:center;margin:8px 0 0}.print-capture{display:none}@media print{.doc-capture{margin:5mm 0;break-inside:auto}.screen-capture,.capture-caption{display:none}.print-capture{display:block}.capture-part{break-inside:avoid;margin:0 0 7mm}.capture-part+.capture-part{break-before:page}.capture-part-caption{font-size:8pt;color:#526d5c;line-height:1.5;margin:0 0 3mm}.capture-slice{position:relative;width:100%;overflow:hidden;border:1px solid #d7e3d4;border-radius:0;break-inside:avoid}.capture-slice img{position:absolute;left:0;width:100%;height:auto;max-width:none;max-height:none;margin:0;border:0;border-radius:0;box-shadow:none;display:block}}
+</style></head><body><header><a href="index.html"><img src="assets/logo.svg" alt="">NextRole</a><nav aria-label="문서 탐색"><a href="index.html">서비스 소개</a><a href="user-guide.html">사용자 가이드</a><a href="admin-guide.html">관리자 가이드</a><a href="user-guide.pdf">PDF</a><a href="user-guide.md">Markdown</a></nav></header><main><h1 id="nextrole-사용자-가이드">NextRole 사용자 가이드</h1>
+<p><strong>버전 1.0.0 · 한국어 · 2026-09-27</strong></p>
+<p>NextRole은 현재 경력을 구조화하고, 목표 직무와 추가 역량에 따라 전환 가능성을 비교하는 경력전환 시뮬레이터입니다. “어떤 직업이 맞을까?”를 살펴본 다음, “이 역량을 더하면 어떻게 달라질까?”를 직접 실험할 수 있습니다.</p>
+<p>이 가이드의 화면은 실제 서비스를 실행해 촬영한 합성 시연 데이터입니다. 인물·조직·채용·교육 예시는 실제 모집 정보가 아닙니다. 운영 중인 서비스의 메뉴는 관리자 설정과 계정 역할에 따라 달라질 수 있습니다.</p>
+<p><a href="index.html">서비스 소개</a> · <a href="index.html#video">소개 영상</a> · <a href="admin-guide.html">관리자 가이드</a> · <a href="user-guide.pdf">PDF 내려받기</a> · <a href="user-guide.md">Markdown 원문</a> · <a href="screenshots/index.html">전체 화면 갤러리</a></p>
+<div class="toc"><span class="toctitle">목차</span><ul>
+<li><a href="#시작하기">시작하기</a></li>
+<li><a href="#대시보드">대시보드</a></li>
+<li><a href="#경력-프로필-작성">경력 프로필 작성</a></li>
+<li><a href="#직무-발견과-비교">직무 발견과 비교</a></li>
+<li><a href="#적합도와-역량-격차-읽기">적합도와 역량 격차 읽기</a></li>
+<li><a href="#what-if-시뮬레이션">What-if 시뮬레이션</a></li>
+<li><a href="#로드맵과-실행-기록">로드맵과 실행 기록</a></li>
+<li><a href="#교육과-채용정보">교육과 채용정보</a></li>
+<li><a href="#저장한-시뮬레이션">저장한 시뮬레이션</a></li>
+<li><a href="#ai-스트리밍-설명">AI 스트리밍 설명</a></li>
+<li><a href="#개인-api-키-관리">개인 API 키 관리</a></li>
+<li><a href="#rest-api와-mcp">REST API와 MCP</a></li>
+<li><a href="#개인-설정과-비밀번호">개인 설정과 비밀번호</a></li>
+<li><a href="#선택적-검토승인">선택적 검토·승인</a></li>
+<li><a href="#문제-해결">문제 해결</a></li>
+<li><a href="#화면별-빠른-참조">화면별 빠른 참조</a></li>
+</ul>
+</div>
+<h2 id="시작하기">시작하기</h2>
+<h3 id="로그인과-버전-확인">로그인과 버전 확인</h3>
+<p>조직에서 안내한 NextRole 주소에 접속합니다. 이메일과 비밀번호를 입력하고 <strong>로그인</strong>을 선택합니다. 관리자가 SSO를 연결했다면 로그인 화면에 Google, LinkedIn, 카카오, 네이버, Keycloak 또는 조직에서 지정한 이름의 버튼이 나타납니다.</p>
+<figure class="doc-capture"><div class="screen-capture"><img alt="로그인 화면: 이메일·비밀번호, SSO 연결 버튼과 하단 버전 정보" src="screenshots/login.png" /></div><figcaption class="capture-caption"><a href="screenshots/login.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">로그인 화면: 이메일·비밀번호, SSO 연결 버튼과 하단 버전 정보 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/login.png" alt="로그인 화면: 이메일·비밀번호, SSO 연결 버튼과 하단 버전 정보 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<ul>
+<li><strong>계정 만들기</strong>가 보이면 직접 가입할 수 있습니다. 보이지 않으면 관리자에게 계정을 요청합니다.</li>
+<li>로그인 화면 하단에서 <code>NextRole v1.0.0</code>과 같은 서비스 버전을 확인합니다.</li>
+<li>로그인 후에는 오른쪽 위 프로필 메뉴 → <strong>NextRole 버전 정보</strong>에서 같은 정보를 확인합니다.</li>
+<li>일반 로그인 비밀번호는 12~72바이트 범위입니다. 한글 등 여러 바이트 문자는 글자 수와 바이트 수가 다릅니다.</li>
+<li>SSO 이메일과 기존 로컬 계정 이메일이 같아도 자동으로 병합하지 않습니다. 중복 안내가 나오면 기존 계정으로 로그인하거나 관리자에게 문의합니다.</li>
+</ul>
+<figure class="doc-capture"><div class="screen-capture"><img alt="프로필 컨텍스트 메뉴에서 서비스 버전을 확인하는 화면" src="screenshots/profile-menu.png" /></div><figcaption class="capture-caption"><a href="screenshots/profile-menu.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">프로필 컨텍스트 메뉴에서 서비스 버전을 확인하는 화면 · 1/2</p><div class="capture-slice" style="aspect-ratio:1440/757"><img src="screenshots/profile-menu.png" alt="프로필 컨텍스트 메뉴에서 서비스 버전을 확인하는 화면 · 1/2" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">프로필 컨텍스트 메뉴에서 서비스 버전을 확인하는 화면 · 2/2</p><div class="capture-slice" style="aspect-ratio:1440/757"><img src="screenshots/profile-menu.png" alt="프로필 컨텍스트 메뉴에서 서비스 버전을 확인하는 화면 · 2/2" style="top:-100.00000000%"></div></div></div></figure>
+<h3 id="화면-구성과-이동">화면 구성과 이동</h3>
+<p>왼쪽은 <strong>나의 커리어 공간</strong> 메뉴, 오른쪽은 현재 작업 화면입니다. 모바일에서는 상단의 메뉴 열기 버튼으로 왼쪽 메뉴를 펼칩니다. URL에 현재 메뉴가 반영되므로 <strong>내 경력</strong>, <strong>직무 비교</strong>, <strong>관리 설정</strong> 등에서 새로고침해도 해당 메뉴로 돌아옵니다. 아직 저장하지 않은 입력은 새로고침하면 사라질 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>메뉴</th>
+<th>주요 작업</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>대시보드</td>
+<td>경력 현황과 추천 직무 확인</td>
+</tr>
+<tr>
+<td>내 경력</td>
+<td>경력 입력, 파일 분석, 역량 확인과 저장</td>
+</tr>
+<tr>
+<td>직무 발견</td>
+<td>추천 Top 5, 목표 직무 검색</td>
+</tr>
+<tr>
+<td>직무 비교</td>
+<td>최대 3개 직무의 결과 비교</td>
+</tr>
+<tr>
+<td>경력 시뮬레이터</td>
+<td>목표·기간·추가 역량에 따른 재계산</td>
+</tr>
+<tr>
+<td>나의 로드맵</td>
+<td>실행 계획 확인과 완료 표시</td>
+</tr>
+<tr>
+<td>교육 · 채용</td>
+<td>연동된 교육과정·채용공고 확인</td>
+</tr>
+<tr>
+<td>저장한 시뮬레이션</td>
+<td>과거 결과 조회·다시 계산·삭제</td>
+</tr>
+<tr>
+<td>개인 API 키</td>
+<td>발급·권한 수정·회전·폐기</td>
+</tr>
+<tr>
+<td>API · MCP</td>
+<td>명세와 클라이언트 연결 예제</td>
+</tr>
+<tr>
+<td>개인 설정</td>
+<td>표시 이름, 개인 선호, 비밀번호</td>
+</tr>
+<tr>
+<td>검토 · 승인</td>
+<td>관리자가 절차를 켰을 때만 표시</td>
+</tr>
+</tbody>
+</table>
+<p>서비스 관리자에게는 <strong>서비스 관리</strong> 이동 메뉴가 추가됩니다. 관리자 공간은 개인 경력 공간과 분리되어 있습니다.</p>
+<h3 id="처음-사용하는-순서">처음 사용하는 순서</h3>
+<ol>
+<li><strong>내 경력</strong>에서 현재 직무, 경력 기간, 희망지역, 주당 학습시간을 입력합니다.</li>
+<li>자유서술 또는 이력서로 역량을 추출하고 수준·신뢰도를 직접 확인합니다.</li>
+<li><strong>경력 저장</strong>을 눌러 프로필을 저장합니다.</li>
+<li><strong>직무 발견</strong>에서 관심 직무를 고릅니다.</li>
+<li><strong>경력 시뮬레이터</strong>에서 추가 역량과 기간을 바꿔 봅니다.</li>
+<li>결과를 저장하고 <strong>나의 로드맵</strong>에서 실행 항목을 확인합니다.</li>
+</ol>
+<h2 id="대시보드">대시보드</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="대시보드: 경력 시뮬레이션 시작과 추천 직무" src="screenshots/dashboard.png" /></div><figcaption class="capture-caption"><a href="screenshots/dashboard.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">대시보드: 경력 시뮬레이션 시작과 추천 직무 · 1/2</p><div class="capture-slice" style="aspect-ratio:1440/757"><img src="screenshots/dashboard.png" alt="대시보드: 경력 시뮬레이션 시작과 추천 직무 · 1/2" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">대시보드: 경력 시뮬레이션 시작과 추천 직무 · 2/2</p><div class="capture-slice" style="aspect-ratio:1440/757"><img src="screenshots/dashboard.png" alt="대시보드: 경력 시뮬레이션 시작과 추천 직무 · 2/2" style="top:-100.00000000%"></div></div></div></figure>
+<p><strong>경력 시뮬레이션 실행</strong>으로 실험을 시작하거나 <strong>내 경력 업데이트</strong>로 프로필을 보완합니다. 추천 직무 카드의 점수는 현재 저장된 경력에서 계산합니다. 아직 경력을 입력하지 않았다면 먼저 프로필을 작성하세요. 빈 경력으로 나온 순위는 개인에게 검증된 추천이 아닙니다.</p>
+<p>저장된 경력을 수정한 뒤 새로 계산하면 결과가 바뀔 수 있습니다. 동일한 경력·직무 모델·관리자 가중치·추가 조건에서는 같은 점수를 계산합니다.</p>
+<h2 id="경력-프로필-작성">경력 프로필 작성</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="내 경력: 경력 이야기 입력, 기본 정보와 역량 수준 편집" src="screenshots/profile.png" /></div><figcaption class="capture-caption"><a href="screenshots/profile.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">내 경력: 경력 이야기 입력, 기본 정보와 역량 수준 편집 · 1/2</p><div class="capture-slice" style="aspect-ratio:1440/748"><img src="screenshots/profile.png" alt="내 경력: 경력 이야기 입력, 기본 정보와 역량 수준 편집 · 1/2" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">내 경력: 경력 이야기 입력, 기본 정보와 역량 수준 편집 · 2/2</p><div class="capture-slice" style="aspect-ratio:1440/747"><img src="screenshots/profile.png" alt="내 경력: 경력 이야기 입력, 기본 정보와 역량 수준 편집 · 2/2" style="top:-100.13386881%"></div></div></div></figure>
+<h3 id="기본-정보">기본 정보</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>입력 방법과 활용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>이름</td>
+<td>본인을 구분할 이름</td>
+</tr>
+<tr>
+<td>현재 직무</td>
+<td>실제 수행한 직무를 구체적으로 입력</td>
+</tr>
+<tr>
+<td>경력 기간</td>
+<td>총 경력 연수. 직무 참고 경력과 비교</td>
+</tr>
+<tr>
+<td>경력 공백 (개월)</td>
+<td>0~600개월. 공백 자체로 감점하지 않고 재진입 준비에 활용</td>
+</tr>
+<tr>
+<td>학력</td>
+<td>입력한 학력과 목표 직무의 참고 학력을 비교</td>
+</tr>
+<tr>
+<td>희망 지역</td>
+<td>공고 조회의 지역 필터와 개인 선호에 활용</td>
+</tr>
+<tr>
+<td>산업 · 도메인</td>
+<td>금융, IT, 제조, 서비스 등 실제 산업 경험</td>
+</tr>
+<tr>
+<td>자격증</td>
+<td>쉼표로 구분해 보관. 검증 매핑 없는 자격증은 점수를 자동 가산하지 않음</td>
+</tr>
+<tr>
+<td>주당 학습 가능 시간</td>
+<td>참고 학습기간 계산에 사용. 점수 자체를 올리지는 않음</td>
+</tr>
+<tr>
+<td>선호 직무</td>
+<td>직무 이름, ID 또는 분류와 일치하면 선호 요소에 반영</td>
+</tr>
+</tbody>
+</table>
+<p>교육·경력·지역이 비어 있으면 해당 요소에서 근거를 확인할 수 없어 낮은 점수가 나올 수 있습니다. 불필요하게 유리한 값을 넣기보다 실제 상태를 기록해야 여러 경로를 유용하게 비교할 수 있습니다.</p>
+<p>경력 공백을 입력하면 최근 도구·업무 방식 확인과 작은 복귀 프로젝트를 로드맵 첫 단계에 추가합니다. 공백 기간을 이유로 적합도를 깎거나 다시 취업할 가능성을 낮다고 판단하지 않습니다.</p>
+<h3 id="자유서술에서-역량-추출">자유서술에서 역량 추출</h3>
+<p><strong>나의 경력 이야기</strong>에 업무, 기술, 사용 기간을 적은 뒤 <strong>경력에서 역량 추출</strong>을 누릅니다.</p>
+<pre><code class="language-text">Java 백엔드 개발 경력 10년입니다.
+Java 10년, Spring 8년, Docker 4년, Kubernetes 1년 경험이 있습니다.
+금융 도메인에서 REST API와 CI/CD를 운영했습니다.
+Python은 기초 수준입니다. 희망 지역은 서울입니다.
+</code></pre>
+<p>오프라인 파서는 알려진 기술명·별칭과 명시된 기간을 구조화합니다. <code>K8s</code>와 <code>쿠버네티스</code>는 <code>Kubernetes</code>로 정규화합니다. 모든 전문용어와 문장 의미를 이해하는 것은 아니므로 추출 결과를 확인하고 빠진 역량을 추가하세요. 앞으로 배우고 싶은 기술을 이미 가진 기술처럼 적지 않는 것이 좋습니다.</p>
+<p>자동 추출 후 <strong>경력 저장</strong>을 눌러야 저장된 프로필에 반영됩니다. 예시 채우기는 시연을 위한 입력이며 본인의 실제 경력과 구분하세요.</p>
+<h3 id="pdfdocxtxt-이력서-업로드">PDF·DOCX·TXT 이력서 업로드</h3>
+<p><strong>이력서 업로드</strong>에서 파일을 선택합니다.</p>
+<ul>
+<li>지원 형식: <code>.pdf</code>, <code>.docx</code>, UTF-8 <code>.txt</code></li>
+<li>최대 파일 크기: 10 MiB</li>
+<li>PDF: 텍스트가 포함된 PDF를 지원하며 최대 앞 100페이지를 처리합니다.</li>
+<li>스캔 이미지 PDF: OCR 결과가 없으면 텍스트 추출이 불가능합니다. OCR 처리한 PDF 또는 TXT로 변환합니다.</li>
+<li>DOCX: 본문 텍스트를 추출합니다. 이미지에만 있는 글자와 복잡한 표의 의미는 자동 해석하지 않습니다.</li>
+<li>암호화·손상 파일 또는 추출 텍스트가 지나치게 큰 파일은 오류가 표시됩니다.</li>
+</ul>
+<p>파일은 로컬 서버에서 분석합니다. 이력서 업로드 자체가 외부 AI 전송을 의미하지 않습니다. 별도 AI 설명 기능을 사용할 때는 조직이 설정한 AI 서버로 관련 입력이 전송될 수 있습니다.</p>
+<h3 id="역량-수준과-신뢰도">역량 수준과 신뢰도</h3>
+<table>
+<thead>
+<tr>
+<th>수준</th>
+<th>기록 기준 예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>보유 근거 없음</td>
+</tr>
+<tr>
+<td>1</td>
+<td>입문·기본 개념 이해</td>
+</tr>
+<tr>
+<td>2</td>
+<td>기초 과제를 도움을 받아 수행</td>
+</tr>
+<tr>
+<td>3</td>
+<td>일반적인 실무를 독립 수행</td>
+</tr>
+<tr>
+<td>4</td>
+<td>복잡한 실무와 운영 문제 해결</td>
+</tr>
+<tr>
+<td>5</td>
+<td>고급 설계·최적화·지도 가능</td>
+</tr>
+</tbody>
+</table>
+<p>이 기준은 NextRole의 내부 비교 척도입니다. 특정 자격시험 등급이나 NCS 공식 수준과 동일하지 않습니다.</p>
+<table>
+<thead>
+<tr>
+<th>신뢰도</th>
+<th>의미</th>
+<th>점수 반영</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>명시 <code>explicit</code></td>
+<td>사용자가 보유 사실을 입력하거나 확인</td>
+<td>반영</td>
+</tr>
+<tr>
+<td>추론 <code>inferred</code></td>
+<td>설명에서 추정한 역량</td>
+<td>확인 전 제외</td>
+</tr>
+<tr>
+<td>검증 필요 <code>review</code></td>
+<td>자동 추출 결과를 추가 확인해야 함</td>
+<td>확인 전 제외</td>
+</tr>
+</tbody>
+</table>
+<p>프로젝트 리딩을 했다는 문장에서 <strong>프로젝트 관리</strong>를 추론할 수 있지만, 해당 역량을 충분히 보유했다고 확정하지 않습니다. 실제 경험을 확인한 뒤 수준과 신뢰도를 수정해 저장하세요. 역량 추가 버튼으로 새 역량을 입력하고 불필요한 항목은 삭제할 수 있습니다.</p>
+<h2 id="직무-발견과-비교">직무 발견과 비교</h2>
+<h3 id="직무-발견">직무 발견</h3>
+<figure class="doc-capture"><div class="screen-capture"><img alt="직무 발견: 추천 Top 5와 직무 라이브러리 검색" src="screenshots/discover.png" /></div><figcaption class="capture-caption"><a href="screenshots/discover.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 1/6</p><div class="capture-slice" style="aspect-ratio:1440/1262"><img src="screenshots/discover.png" alt="직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 1/6" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 2/6</p><div class="capture-slice" style="aspect-ratio:1440/1262"><img src="screenshots/discover.png" alt="직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 2/6" style="top:-100.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 3/6</p><div class="capture-slice" style="aspect-ratio:1440/1262"><img src="screenshots/discover.png" alt="직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 3/6" style="top:-200.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 4/6</p><div class="capture-slice" style="aspect-ratio:1440/1262"><img src="screenshots/discover.png" alt="직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 4/6" style="top:-300.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 5/6</p><div class="capture-slice" style="aspect-ratio:1440/1262"><img src="screenshots/discover.png" alt="직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 5/6" style="top:-400.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 6/6</p><div class="capture-slice" style="aspect-ratio:1440/1258"><img src="screenshots/discover.png" alt="직무 발견: 추천 Top 5와 직무 라이브러리 검색 · 6/6" style="top:-501.58982512%"></div></div></div></figure>
+<p>추천 Top 5는 저장된 프로필과 직무 모델의 비교 결과입니다. 기본 제공 직무 모델에는 개발·AI·데이터·기획·디자인·마케팅·영업·인사·회계·물류·품질 등의 합성 예시가 포함됩니다. 관리자가 조직 직무를 가져오면 검색 대상에 추가됩니다.</p>
+<p><strong>목표 직무 검색</strong>에서 직무명, 기술 또는 분류를 검색하고 <strong>시뮬레이션</strong>을 선택합니다. 관심·비선호 피드백은 이후 추천 순위와 표시 후보에 영향을 줍니다. 추천 순위에는 선호 피드백과 관련 실제 공고 수의 제한된 보정이 적용될 수 있지만, 화면의 여섯 요소 적합도 점수 자체는 그대로입니다. 비선호 직무는 추천 목록에서 제외합니다. 관련 실제 공고가 없으면 채용 수요 보정을 만들지 않습니다.</p>
+<h3 id="최대-세-개-직무-비교">최대 세 개 직무 비교</h3>
+<figure class="doc-capture"><div class="screen-capture"><img alt="직무 비교: 세 목표 직무의 적합도와 우선 학습 역량" src="screenshots/compare.png" /></div><figcaption class="capture-caption"><a href="screenshots/compare.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">직무 비교: 세 목표 직무의 적합도와 우선 학습 역량 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1385"><img src="screenshots/compare.png" alt="직무 비교: 세 목표 직무의 적합도와 우선 학습 역량 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p><strong>비교할 직무 선택</strong>에서 최대 3개를 선택합니다. 적합도, 예상 학습기간, 강점과 우선 학습 역량을 나란히 봅니다. 예를 들어 AI 플랫폼 엔지니어, DevOps 엔지니어, 데이터 엔지니어를 비교하면 기존 경험을 얼마나 활용하는지 확인할 수 있습니다.</p>
+<p>비교 결과에서 <strong>이 경로 실험하기</strong>를 누르면 해당 직무의 시뮬레이터로 이동합니다. 점수만으로 결정하기보다 수행 업무, 실제 공고 요건, 흥미와 생활 조건을 함께 고려하세요.</p>
+<h2 id="적합도와-역량-격차-읽기">적합도와 역량 격차 읽기</h2>
+<p>기본 가중치는 다음과 같으며 관리자가 변경할 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>요소</th>
+<th style="text-align: right;">기본 비중</th>
+<th>계산 근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기술역량</td>
+<td style="text-align: right;">40%</td>
+<td>확인된 현재 수준 ÷ 요구 수준을 중요도로 가중 평균</td>
+</tr>
+<tr>
+<td>전이 가능 역량</td>
+<td style="text-align: right;">20%</td>
+<td>정확히 일치하는 기술과 로컬 의미 특징 벡터 유사도</td>
+</tr>
+<tr>
+<td>경력</td>
+<td style="text-align: right;">15%</td>
+<td>총 경력과 직무 참고 경력의 비율, 상한 적용</td>
+</tr>
+<tr>
+<td>산업경험</td>
+<td style="text-align: right;">10%</td>
+<td>산업 일치 또는 정의된 인접 산업</td>
+</tr>
+<tr>
+<td>교육·자격</td>
+<td style="text-align: right;">5%</td>
+<td>학력 요건 비교. 자격증은 검증 매핑 전 자동 가산 없음</td>
+</tr>
+<tr>
+<td>개인 선호</td>
+<td style="text-align: right;">10%</td>
+<td>선호 직무·분류와 지역의 명시적 일치</td>
+</tr>
+</tbody>
+</table>
+<p><strong>역량 격차 = max(요구 수준 − 확인된 현재 수준, 0)</strong>입니다. 다른 기술과 개념이 비슷해도 직접적인 부족 수준을 채웠다고 간주하지 않습니다. 전이 가능성은 별도 요소이며, 다른 기술의 유사도 기여는 보수적으로 제한합니다.</p>
+<p>난이도는 <code>100 − 적합도</code>입니다. 점수가 80이라고 취업 확률이 80%라는 뜻은 아닙니다. 총 경력이 길어도 새로운 목표에 필요한 기술이 없으면 기술 점수는 낮을 수 있습니다. 자동 추론 상태인 역량은 점수에서 제외되므로 확인이 필요합니다.</p>
+<h2 id="what-if-시뮬레이션">What-if 시뮬레이션</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="경력 시뮬레이터: 점수 변화, 부족 역량, 여섯 요소와 경로" src="screenshots/simulator.png" /></div><figcaption class="capture-caption"><a href="screenshots/simulator.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">경력 시뮬레이터: 점수 변화, 부족 역량, 여섯 요소와 경로 · 1/3</p><div class="capture-slice" style="aspect-ratio:1440/1384"><img src="screenshots/simulator.png" alt="경력 시뮬레이터: 점수 변화, 부족 역량, 여섯 요소와 경로 · 1/3" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">경력 시뮬레이터: 점수 변화, 부족 역량, 여섯 요소와 경로 · 2/3</p><div class="capture-slice" style="aspect-ratio:1440/1384"><img src="screenshots/simulator.png" alt="경력 시뮬레이터: 점수 변화, 부족 역량, 여섯 요소와 경로 · 2/3" style="top:-100.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">경력 시뮬레이터: 점수 변화, 부족 역량, 여섯 요소와 경로 · 3/3</p><div class="capture-slice" style="aspect-ratio:1440/1384"><img src="screenshots/simulator.png" alt="경력 시뮬레이터: 점수 변화, 부족 역량, 여섯 요소와 경로 · 3/3" style="top:-200.00000000%"></div></div></div></figure>
+<h3 id="목표와-기간-선택">목표와 기간 선택</h3>
+<ol>
+<li><strong>목표 직무</strong>에서 실험할 직무를 선택합니다.</li>
+<li><strong>3개월 / 6개월 / 12개월</strong> 중 계획 범위를 선택합니다.</li>
+<li>현재 적합도, 부족 역량과 근거를 확인합니다.</li>
+<li>학습했다고 가정할 역량을 선택하거나 수준을 조정합니다.</li>
+<li>조건 변경에 따른 예상 적합도와 변화폭을 확인합니다.</li>
+</ol>
+<p>기간을 늘리는 것만으로 역량이 생기지는 않으므로 점수는 자동 상승하지 않습니다. 기간은 실행계획과 학습량 안내에 사용합니다. 추가 역량은 <strong>가정</strong>이며 원래 경력 프로필을 수정하지 않습니다.</p>
+<h3 id="학습-효과와-우선순위">학습 효과와 우선순위</h3>
+<p><strong>학습 효과가 높은 역량</strong>은 각 부족 역량을 목표 수준까지 채웠을 때 같은 조건에서 얼마나 점수가 증가하는지 보여 줍니다. 개별 상승폭을 단순히 더하면 조합 결과와 다를 수 있으므로, 실제 선택 조합은 시뮬레이터로 다시 계산하세요.</p>
+<p>학습계획의 우선순위는 점수 상승과 참고 학습시간을 함께 고려합니다. 이 학습 효과는 금전적인 투자 수익을 예측하는 금융 지표가 아닙니다.</p>
+<h3 id="프로젝트자격증-가정">프로젝트·자격증 가정</h3>
+<p><strong>프로젝트 경험 가정</strong>에 수행했다고 가정할 내용을 입력하고 <strong>추가 조건 확인</strong>으로 반영합니다. 문장에서 인식한 역량은 보수적인 수준의 가정으로 계산됩니다. 실제 수행 증명이나 검증을 대신하지 않습니다.</p>
+<p><strong>자격증 가정</strong>은 계획 비교를 위한 입력입니다. 현재 버전에서는 특정 자격증과 직무 요구사항의 검증 매핑이 없으므로 자격증 이름만 추가했다고 적합도를 올리지 않습니다.</p>
+<h3 id="직접-전환과-중간-직무">직접 전환과 중간 직무</h3>
+<p><strong>목표까지, 다양한 경로</strong>에서 현재 직무 → 목표 직무로 직접 가는 경로와 중간 직무를 거치는 경로를 비교합니다. 중간 직무 요구역량을 먼저 확보했다고 가정한 뒤 남은 목표 역량을 학습하므로 중복 학습을 제외합니다.</p>
+<p><strong>추천 순 / 기간 짧은 순 / 추가 역량 적은 순 / 경력 활용 높은 순</strong>으로 경로를 정렬할 수 있습니다. “추가 역량 적은 순”은 항목 수, “경력 활용 높은 순”은 해당 단계의 요구 수준 대비 이미 보유한 수준을 비교합니다. 목록에 제시된 경로 안에서의 비교이며 전체 노동시장의 모든 경로를 최적화한 결과는 아닙니다.</p>
+<p>표시 기간은 기술 수준별 학습시간과 주당 학습시간으로 계산한 참고치입니다. 실제 구직기간·재직기간·채용 성공까지의 기간을 포함하지 않습니다. 비용은 20시간당 5만 원을 가정한 합성 추정치이며 실제 교육과정 가격이나 정부지원금이 아닙니다. 화면에 표시된 출처를 함께 확인하세요.</p>
+<h3 id="결과-저장">결과 저장</h3>
+<p><strong>시뮬레이션 저장</strong>으로 현재 결과를 기록합니다. 저장한 결과는 그 당시 프로필·직무·가중치의 계산값이며, 이후 프로필을 바꿔도 자동으로 덮어쓰지 않습니다.</p>
+<h2 id="로드맵과-실행-기록">로드맵과 실행 기록</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="나의 로드맵: 단계별 계획, 완료 체크와 달성률" src="screenshots/roadmap.png" /></div><figcaption class="capture-caption"><a href="screenshots/roadmap.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">나의 로드맵: 단계별 계획, 완료 체크와 달성률 · 1/2</p><div class="capture-slice" style="aspect-ratio:1440/877"><img src="screenshots/roadmap.png" alt="나의 로드맵: 단계별 계획, 완료 체크와 달성률 · 1/2" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">나의 로드맵: 단계별 계획, 완료 체크와 달성률 · 2/2</p><div class="capture-slice" style="aspect-ratio:1440/876"><img src="screenshots/roadmap.png" alt="나의 로드맵: 단계별 계획, 완료 체크와 달성률 · 2/2" style="top:-100.11415525%"></div></div></div></figure>
+<p>목표 직무와 기간에 따른 단계별 실행 항목을 확인합니다. 기초 실습 → 직무 프로젝트 → 성과 검증과 전환 준비 흐름으로 계획이 구성됩니다. 완료 체크는 계정별로 저장됩니다.</p>
+<ul>
+<li>완료 체크는 <strong>실행 기록</strong>입니다. 보유 역량 수준을 자동으로 올리지 않습니다.</li>
+<li>실제로 역량을 습득했다면 <strong>내 경력</strong>에 수준과 근거를 반영하고 저장합니다.</li>
+<li>같은 목표를 다시 계산해 격차가 얼마나 줄었는지 확인합니다.</li>
+<li>주당 학습시간 대비 선택 기간의 학습량이 많으면 경고를 참고해 기간이나 우선순위를 조정합니다.</li>
+</ul>
+<h2 id="교육과-채용정보">교육과 채용정보</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="교육·채용: 출처가 구분된 교육과정·채용공고와 역량 빈도" src="screenshots/opportunities.png" /></div><figcaption class="capture-caption"><a href="screenshots/opportunities.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">교육·채용: 출처가 구분된 교육과정·채용공고와 역량 빈도 · 1/2</p><div class="capture-slice" style="aspect-ratio:1440/1087"><img src="screenshots/opportunities.png" alt="교육·채용: 출처가 구분된 교육과정·채용공고와 역량 빈도 · 1/2" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">교육·채용: 출처가 구분된 교육과정·채용공고와 역량 빈도 · 2/2</p><div class="capture-slice" style="aspect-ratio:1440/1087"><img src="screenshots/opportunities.png" alt="교육·채용: 출처가 구분된 교육과정·채용공고와 역량 빈도 · 2/2" style="top:-100.00000000%"></div></div></div></figure>
+<p>목표 직무를 선택하고 교육·훈련 또는 채용 탭을 봅니다. 보유·요구 역량, 제목과 희망지역을 기준으로 연결된 데이터에서 관련 항목을 찾습니다.</p>
+<p><strong>합성 예시</strong> 표시는 실제 개설 교육이나 실제 채용이 아닙니다. 실제 공고가 연결되어 있으면 기관·지역·설명·원문 링크와 출처가 표시됩니다. <strong>원문에서 자세히 보기</strong>로 운영기관의 정확한 일정, 자격, 비용과 지원 방법을 확인하세요.</p>
+<p><strong>연결된 채용 정보에서 자주 찾는 역량</strong>은 가져온 실제 공고 중 각 역량을 포함한 공고 수입니다. 전체 노동시장의 수요나 실시간 트렌드가 아니며 합성 예시는 집계에서 제외합니다. 데이터가 비어 있으면 관리자의 연동 여부와 마지막 수집 상태를 확인해야 합니다.</p>
+<h3 id="실제-채용-데이터로-보는-기회">실제 채용 데이터로 보는 기회</h3>
+<p>교육·채용 페이지 아래의 <strong>실제 채용 데이터로 보는 기회</strong> 패널에서 지역별 채용 기회, 요구 역량의 변화와 공개된 급여 정보를 확인합니다. 실제로 가져온 공고만 집계하며 합성 예시는 제외합니다.</p>
+<p>집계는 유효한 마감일 또는 상시채용 표시가 있는 실제 공고를 대상으로 합니다. 마감일을 확인할 수 없는 공고는 수요 집계에서 제외되므로 일반 공고 목록의 개수와 다를 수 있습니다. 동일 원문 URL 중복은 제거하며, 여러 지역을 모집한 공고는 각 지역에 포함될 수 있습니다.</p>
+<p>지역별 건수는 수집 범위 안의 분포입니다. 다른 날짜의 이전 관측이 없으면 역량의 증가·감소 추세를 만들어 표시하지 않습니다. 변화값은 백분율이 아니라 해당 역량을 요구하는 공고 수의 차이입니다. 수집 범위 변경과 공고 만료도 영향을 줍니다. 급여는 최대 20개의 원문 표기를 참고하며, 서로 다른 연봉·월급·시급을 임의로 평균내지 않습니다. 표본과 원문 출처를 함께 확인하세요.</p>
+<h2 id="저장한-시뮬레이션">저장한 시뮬레이션</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="저장한 시뮬레이션: 과거 실험 결과와 다시 계산·검토 요청" src="screenshots/saved.png" /></div><figcaption class="capture-caption"><a href="screenshots/saved.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">저장한 시뮬레이션: 과거 실험 결과와 다시 계산·검토 요청 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1299"><img src="screenshots/saved.png" alt="저장한 시뮬레이션: 과거 실험 결과와 다시 계산·검토 요청 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p>과거 결과를 열어 목표와 점수를 확인합니다. <strong>현재 프로필로 다시 계산</strong>을 선택하면 최신 프로필·모델로 새로운 계산을 시작합니다. 기존 기록을 없애려면 <strong>삭제</strong>를 선택합니다. 삭제 전 필요한 결과를 보관하세요.</p>
+<p>관리자가 검토 절차를 켰을 때만 <strong>검토 요청</strong> 버튼이 나타납니다.</p>
+<h2 id="ai-스트리밍-설명">AI 스트리밍 설명</h2>
+<p>경력 분석·시뮬레이션·계획의 설명 영역에서 <strong>스트리밍 설명 보기</strong>를 선택합니다. 생성되는 문장이 순서대로 표시되며 <strong>생성 중지</strong>로 요청을 중단할 수 있습니다.</p>
+<p>AI가 비활성화되어 있으면 오프라인 규칙에 따른 설명을 제공합니다. AI가 활성화되어 있으면 관리자가 설정한 OpenAI 호환 서버를 사용합니다. 외부 AI 연결 여부는 조직의 운영 정책을 따릅니다.</p>
+<p>AI 설명을 확인할 때에는 구조화된 점수·역량 격차·출처를 우선합니다. 설명이 입력 경력이나 계산값과 맞지 않으면 해당 내용을 사실로 취급하지 말고 프로필과 연결 상태를 점검하세요. AI 연결이 실패해도 이미 계산된 적합도와 경로의 근거는 따로 확인할 수 있습니다.</p>
+<h2 id="개인-api-키-관리">개인 API 키 관리</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="개인 API 키: 이름, 권한, 유효기간과 회전·폐기" src="screenshots/keys.png" /></div><figcaption class="capture-caption"><a href="screenshots/keys.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">개인 API 키: 이름, 권한, 유효기간과 회전·폐기 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/keys.png" alt="개인 API 키: 이름, 권한, 유효기간과 회전·폐기 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<h3 id="발급과-권한-선택">발급과 권한 선택</h3>
+<p><strong>API 키 만들기</strong>에서 사용 목적을 알 수 있는 이름, 필요한 권한, 유효기간을 입력합니다. 관리자가 허용한 범위 안에서만 선택할 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>권한</th>
+<th>허용 작업</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>profile:read</code></td>
+<td>본인의 경력·추천·저장 결과·로드맵 조회</td>
+</tr>
+<tr>
+<td><code>profile:write</code></td>
+<td>본인의 경력 수정·파싱·업로드·피드백·로드맵 저장</td>
+</tr>
+<tr>
+<td><code>jobs:read</code></td>
+<td>직무·교육·채용 조회</td>
+</tr>
+<tr>
+<td><code>simulate:write</code></td>
+<td>시뮬레이션 계산·저장·삭제</td>
+</tr>
+<tr>
+<td><code>ai:use</code></td>
+<td>AI 스트리밍 호출</td>
+</tr>
+<tr>
+<td><code>mcp:use</code></td>
+<td>MCP 엔드포인트 접근. 각 도구 작업 권한도 별도로 필요</td>
+</tr>
+</tbody>
+</table>
+<p>새 키 원문은 <strong>발급·회전 직후 한 번만</strong> 표시됩니다. 사용하는 도구의 비밀 저장소에 보관하세요. 키가 없는 화면을 다시 열어도 원문을 복구할 수 없습니다.</p>
+<h3 id="수정회전폐기">수정·회전·폐기</h3>
+<ul>
+<li><strong>권한 수정</strong>: 현재 키의 이름·범위를 바꿉니다. 축소된 권한은 다음 요청부터 적용됩니다.</li>
+<li><strong>회전</strong>: 새 키를 발급하고 기존 원문을 즉시 무효화합니다. 연결된 도구에 새 키를 반영해야 합니다. 기존 만료일은 유지됩니다.</li>
+<li><strong>폐기</strong>: 해당 키를 더 이상 사용할 수 없게 합니다. 다시 사용하려면 새 키를 발급합니다.</li>
+<li>관리자 정책에서 어떤 범위가 제거되면 그 범위를 가진 기존 키도 해당 작업을 할 수 없습니다.</li>
+</ul>
+<p>개인 API 키로 관리자 설정, 다른 사람의 경력, 키 발급·권한 관리에 접근할 수 없습니다. 키 관리 화면은 로그인한 사용자 세션으로 사용합니다.</p>
+<h2 id="rest-api와-mcp">REST API와 MCP</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="API·MCP: 명세 링크와 외부 도구 연결 예제" src="screenshots/api.png" /></div><figcaption class="capture-caption"><a href="screenshots/api.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">API·MCP: 명세 링크와 외부 도구 연결 예제 · 1/2</p><div class="capture-slice" style="aspect-ratio:1440/757"><img src="screenshots/api.png" alt="API·MCP: 명세 링크와 외부 도구 연결 예제 · 1/2" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">API·MCP: 명세 링크와 외부 도구 연결 예제 · 2/2</p><div class="capture-slice" style="aspect-ratio:1440/756"><img src="screenshots/api.png" alt="API·MCP: 명세 링크와 외부 도구 연결 예제 · 2/2" style="top:-100.13227513%"></div></div></div></figure>
+<p><strong>API · MCP</strong> 화면에서 현재 서비스의 명세와 연결 예제를 확인합니다. API 기본 경로는 <code>/api/v1</code>, MCP 경로는 <code>/mcp</code>입니다. 원격 MCP의 HTTP와 Bearer 인증을 지원하는 클라이언트를 사용합니다.</p>
+<p>다음 예시는 키를 셸 입력으로 받아 프로필을 조회합니다. <code>NEXTROLE_URL</code>과 <code>NEXTROLE_API_KEY</code>는 명령 예제의 클라이언트 변수이며 서버 배포 환경변수가 아닙니다.</p>
+<pre><code class="language-bash">NEXTROLE_URL=https://nextrole.example.com
+read -rsp '개인 API 키: ' NEXTROLE_API_KEY
+printf '\n'
+curl --fail --silent --show-error \
+  -H &quot;Authorization: Bearer ${NEXTROLE_API_KEY}&quot; \
+  &quot;${NEXTROLE_URL}/api/v1/profile&quot;
+</code></pre>
+<p>MCP의 <code>initialize</code> → <code>tools/list</code> → <code>tools/call</code> 순서로 도구를 사용합니다. <code>career_profile</code>, <code>job_search</code>, <code>career_simulate</code>, <code>career_opportunities</code>가 제공됩니다. 도구 목록과 호출은 보유 키의 허용 권한에 맞게 제한됩니다. 상세 요청 형식은 <strong>OpenAPI 명세 보기</strong>와 MCP의 도구 스키마에서 확인합니다.</p>
+<h2 id="개인-설정과-비밀번호">개인 설정과 비밀번호</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="개인 설정: 표시 이름, 기본 기간, 학습 선호와 비밀번호 변경" src="screenshots/preferences.png" /></div><figcaption class="capture-caption"><a href="screenshots/preferences.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">개인 설정: 표시 이름, 기본 기간, 학습 선호와 비밀번호 변경 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/preferences.png" alt="개인 설정: 표시 이름, 기본 기간, 학습 선호와 비밀번호 변경 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p>표시 이름, 기본 시뮬레이션 기간과 개인 선호를 변경한 뒤 <strong>개인 설정 저장</strong>을 누릅니다. 화면의 계정 이메일은 식별자로 사용되며 개인 설정에서 임의로 바꾸지 않습니다.</p>
+<p>비밀번호를 바꾸려면 현재 비밀번호, 새 비밀번호와 확인값을 입력합니다. SSO만으로 가입한 계정의 비밀번호 설정은 관리자에게 문의하세요. 프로필 메뉴의 <strong>로그아웃</strong>은 NextRole 세션을 종료합니다. SSO 공급자 자체의 로그인 세션까지 자동으로 종료하는 기능과는 다릅니다.</p>
+<h2 id="선택적-검토승인">선택적 검토·승인</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="검토·승인: 요청 현황과 검토 의견" src="screenshots/approvals.png" /></div><figcaption class="capture-caption"><a href="screenshots/approvals.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">검토·승인: 요청 현황과 검토 의견 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/approvals.png" alt="검토·승인: 요청 현황과 검토 의견 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p>관리자가 프로세스를 <strong>사용</strong>으로 설정한 경우에만 이 메뉴가 보입니다. 설정하지 않았다면 검토·승인·반려 없이 시뮬레이션을 사용할 수 있습니다.</p>
+<ol>
+<li>결과를 <strong>시뮬레이션 저장</strong>으로 저장합니다.</li>
+<li><strong>저장한 시뮬레이션 → 검토 요청</strong>에서 검토 메모를 작성합니다.</li>
+<li><strong>검토 · 승인</strong>에서 요청 상태를 확인합니다.</li>
+<li>검토자 또는 관리자는 요청 내용과 의견을 확인하고 <strong>승인</strong> 또는 <strong>반려</strong>합니다.</li>
+<li><strong>요청한 시뮬레이션 상세</strong>를 펼쳐 당시 점수·역량 격차·추가 조건과 실행계획을 확인합니다.</li>
+<li>본인이 만든 요청은 본인이 승인할 수 없습니다.</li>
+</ol>
+<p>현재 절차는 단일 단계 검토입니다. 별도의 팀 조직도, 특정 팀장 자동 배정 또는 다단계 결재를 가정하지 마세요. 조직은 검토자 역할을 지정해 운영합니다. 승인 여부가 취업 성공을 보장하거나 자동 채용 지원을 수행하지 않습니다.</p>
+<h2 id="문제-해결">문제 해결</h2>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>확인할 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>로그인이 반복해서 실패</td>
+<td>이메일·비밀번호, 계정 비활성 여부, 잠시 후 재시도</td>
+</tr>
+<tr>
+<td>SSO 버튼이 없음</td>
+<td>관리자의 공급자 활성 여부 확인</td>
+</tr>
+<tr>
+<td>SSO가 중복 이메일 안내</td>
+<td>기존 로컬 계정으로 로그인. 계정 자동 병합은 하지 않음</td>
+</tr>
+<tr>
+<td>추출 결과가 기대와 다름</td>
+<td>기술명과 경험 기간을 분리 입력하고 직접 편집</td>
+</tr>
+<tr>
+<td>PDF에서 글자가 안 나옴</td>
+<td>스캔·암호화 여부 확인, OCR 후 TXT/PDF 재업로드</td>
+</tr>
+<tr>
+<td>점수가 너무 낮음</td>
+<td>경력 저장 여부, 미입력 기본정보, 추론·검증필요 상태 확인</td>
+</tr>
+<tr>
+<td>기간을 늘려도 점수가 같음</td>
+<td>정상. 학습 기간 선택만으로 보유 역량을 늘리지 않음</td>
+</tr>
+<tr>
+<td>교육·채용이 합성 예시만 표시</td>
+<td>실제 데이터 연동 여부를 관리자에게 확인</td>
+</tr>
+<tr>
+<td>AI 설명이 중단</td>
+<td>생성 중지 여부, AI 서버 접근과 모델 제한 확인</td>
+</tr>
+<tr>
+<td>API가 401</td>
+<td>키 만료·회전·폐기 또는 세션 만료 확인</td>
+</tr>
+<tr>
+<td>API가 403</td>
+<td>개인 키 범위와 관리자 허용 정책 확인</td>
+</tr>
+<tr>
+<td>검토 메뉴가 없음</td>
+<td>관리자가 프로세스를 끈 상태일 수 있음</td>
+</tr>
+<tr>
+<td>새로고침 후 내용이 사라짐</td>
+<td>메뉴는 유지되지만 저장 전 폼은 유지되지 않을 수 있음</td>
+</tr>
+</tbody>
+</table>
+<p>장애 문의 시 <strong>서비스 버전, 발생 메뉴, 수행한 작업, 발생 시각, 화면 오류 문구</strong>를 전달하면 원인 파악에 도움이 됩니다. 비밀번호와 API 키 원문은 전달하지 마세요.</p>
+<h2 id="화면별-빠른-참조">화면별 빠른 참조</h2>
+<table>
+<thead>
+<tr>
+<th>원하는 작업</th>
+<th>이동 경로</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>경력 수정</td>
+<td>내 경력 → 경력 저장</td>
+</tr>
+<tr>
+<td>목표 직무 변경</td>
+<td>경력 시뮬레이터 → 목표 직무</td>
+</tr>
+<tr>
+<td>역량 추가 후 계산</td>
+<td>경력 시뮬레이터 → 추가 역량</td>
+</tr>
+<tr>
+<td>세 직무 비교</td>
+<td>직무 비교 → 비교할 직무 선택</td>
+</tr>
+<tr>
+<td>실행 체크</td>
+<td>나의 로드맵 → 완료 체크</td>
+</tr>
+<tr>
+<td>과거 결과 보기</td>
+<td>저장한 시뮬레이션</td>
+</tr>
+<tr>
+<td>개인 키 회전</td>
+<td>개인 API 키 → 회전</td>
+</tr>
+<tr>
+<td>버전 확인</td>
+<td>프로필 메뉴 → NextRole 버전 정보</td>
+</tr>
+</tbody>
+</table>
+<p>문서와 화면의 데이터는 설명용입니다. 정확한 직무 요건과 교육·채용 조건은 승인된 원천 데이터에서 확인하세요.</p></main><footer>NextRole v1.0.0 · 경력의 다음 가능성을 실험하다.</footer></body></html>

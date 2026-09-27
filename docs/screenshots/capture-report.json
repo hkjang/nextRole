@@ -1,0 +1,105 @@
+{
+  "version": "1.0.0",
+  "capturedAt": "2026-09-27T00:17:13.187Z",
+  "desktopViewport": {
+    "width": 1440,
+    "height": 1050
+  },
+  "mobileViewport": {
+    "width": 390,
+    "height": 844
+  },
+  "routes": [
+    {
+      "name": "dashboard",
+      "route": "/"
+    },
+    {
+      "name": "profile",
+      "route": "/profile"
+    },
+    {
+      "name": "discover",
+      "route": "/discover"
+    },
+    {
+      "name": "compare",
+      "route": "/compare"
+    },
+    {
+      "name": "simulator",
+      "route": "/simulator?job=ai-platform"
+    },
+    {
+      "name": "roadmap",
+      "route": "/roadmap?job=ai-platform"
+    },
+    {
+      "name": "opportunities",
+      "route": "/opportunities?job=ai-platform"
+    },
+    {
+      "name": "saved",
+      "route": "/saved"
+    },
+    {
+      "name": "keys",
+      "route": "/keys"
+    },
+    {
+      "name": "api",
+      "route": "/api"
+    },
+    {
+      "name": "preferences",
+      "route": "/preferences"
+    },
+    {
+      "name": "approvals",
+      "route": "/approvals"
+    },
+    {
+      "name": "admin",
+      "route": "/admin"
+    },
+    {
+      "name": "admin-users",
+      "route": "/admin/users"
+    },
+    {
+      "name": "admin-general",
+      "route": "/admin/general"
+    },
+    {
+      "name": "admin-ai",
+      "route": "/admin/ai"
+    },
+    {
+      "name": "admin-security",
+      "route": "/admin/security"
+    },
+    {
+      "name": "admin-scoring",
+      "route": "/admin/scoring"
+    },
+    {
+      "name": "admin-providers",
+      "route": "/admin/providers"
+    },
+    {
+      "name": "admin-connectors",
+      "route": "/admin/connectors"
+    },
+    {
+      "name": "admin-audit",
+      "route": "/admin/audit"
+    }
+  ],
+  "errors": [],
+  "comparisonUpdatedAt": "2026-09-27T00:24:35.061Z",
+  "comparisonJobs": [
+    "ai-platform",
+    "data-engineer",
+    "devops"
+  ]
+}

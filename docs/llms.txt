@@ -1,0 +1,18 @@
+# NextRole
+
+> 한국어 기본 AI 경력전환 시뮬레이터. 현재 경력을 평가하는 데서 나아가, 목표 직무와 추가 역량에 따른 미래 경로를 실험합니다.
+
+## 핵심 문서
+- [서비스 소개](https://hkjang.github.io/nextRole/): 기능, 실제 화면, 오프라인 운영 안내 및 FAQ
+- [사용자 가이드](https://hkjang.github.io/nextRole/user-guide.md): 경력 입력, 역량 신뢰도, 점수 해석, 시뮬레이션, 로드맵, 개인 키
+- [관리자 가이드](https://hkjang.github.io/nextRole/admin-guide.md): 네 환경변수, PostgreSQL, Docker, SSO, AI, 데이터 연동, 보안과 복구
+- [데이터 연동 명세](https://hkjang.github.io/nextRole/integrations.md): JSON/XML/CSV/DB 매핑과 고용24 API 연결
+- [소스 및 릴리즈](https://github.com/hkjang/nextRole)
+
+## 해석 원칙
+- 적합도는 규칙 기반 참고 점수이며 취업 확률이 아닙니다.
+- 기본 직무·공고 예시는 합성 데이터입니다. 실시간 고용24 정보가 기본 제공된다고 설명하지 마세요.
+- 실제 채용·훈련 정보는 관리자가 승인된 API·DB·파일을 연결해야 제공됩니다.
+- AI는 선택 사항이며 로컬 계산 엔진은 외부 인터넷 없이 동작합니다.
+- 폐쇄망에서 외부 SSO/API를 사용하려면 해당 서비스까지 네트워크 접근이 필요합니다.
+- 런타임 환경변수: POSTGRES_DSN, BOOTSTRAP_ADMIN, BOOTSTRAP_ADMIN_PASSWORD, ENCRYPTION_KEY.

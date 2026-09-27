@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>관리자 가이드 | NextRole</title><meta name="description" content="NextRole 오프라인 Docker 배포, 네 환경변수, PostgreSQL, SSO·OIDC, AI 스트리밍, 데이터 연동·키 정책·백업의 상세 가이드입니다."><link rel="canonical" href="https://hkjang.github.io/nextRole/admin-guide.html"><link rel="icon" type="image/svg+xml" href="assets/logo.svg"><meta name="theme-color" content="#136e63"><link rel="stylesheet" href="assets/fonts.css"><style>
+:root{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;color:#203e36;background:#f5f7f2;font-size:17px;line-height:1.85;font-synthesis:none}*{box-sizing:border-box}body{margin:0;word-break:keep-all;overflow-wrap:anywhere}header{max-width:1170px;margin:auto;padding:30px 40px;display:flex;align-items:center;justify-content:space-between;gap:20px}header>a{display:flex;align-items:center;gap:11px;font-size:25px;font-weight:800;text-decoration:none;color:#136e63}header img{width:38px;height:38px}nav{display:flex;gap:22px;font-size:14px}nav a{color:#476c58}main{max-width:1090px;margin:0 auto 60px;padding:55px 65px;background:white;border:1px solid #e0e8dd;border-radius:20px;box-shadow:0 12px 40px #23473106}h1,h2,h3{line-height:1.4;letter-spacing:-.045em;color:#173e36;scroll-margin-top:25px}h1{font-size:39px;margin-top:0}h2{font-size:29px;border-top:1px solid #dce6da;padding-top:38px;margin-top:55px}h3{font-size:22px;margin-top:35px}p{margin:16px 0}a{color:#136e63;text-underline-offset:4px}a:hover{color:#093e36}li{margin:8px 0}li>p{margin:0}table{display:block;width:100%;border-collapse:collapse;overflow-x:auto;margin:25px 0;font-size:15px;line-height:1.7}thead{background:#edf3e9}th,td{text-align:left;vertical-align:top;padding:12px 15px;border:1px solid #dae4d8}th{font-weight:700;white-space:nowrap}tr:nth-child(even){background:#fafcf8}code{font-family:'SFMono-Regular',Consolas,monospace;font-size:.86em;color:#14584d;background:#eef4eb;padding:2px 5px;border-radius:4px;word-break:break-word}pre{background:#163b33;color:#eff7e8;padding:24px;overflow:auto;border-radius:12px;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word}pre code{padding:0;background:transparent;color:inherit;font-size:inherit}img{max-width:100%;height:auto;border:1px solid #dce6da;border-radius:12px;box-shadow:0 9px 28px #173e3608}header img{border:0;box-shadow:none}.toc{padding:24px 30px;background:#f3f7ef;border:1px solid #e0e8d9;border-radius:13px;margin:35px 0}.toctitle{font-size:20px;font-weight:700}.toc ul{list-style:none;padding-left:0;margin:10px 0}.toc li{margin:7px 0;font-size:15px}.toc li ul{padding-left:22px}.toc a{text-decoration:none}blockquote{margin:24px 0;border-left:4px solid #91ba80;padding:2px 22px;background:#f5f8f1;color:#526b56}footer{text-align:center;font-size:13px;color:#68816a;padding:0 25px 35px}::selection{background:#d4ecb5}:focus-visible{outline:3px solid #619a82;outline-offset:4px}@media(max-width:800px){header{padding:24px;align-items:flex-start}nav{flex-wrap:wrap;justify-content:flex-end;gap:8px 15px;font-size:12px}main{margin:0 12px 35px;padding:30px 23px;border-radius:15px}h1{font-size:31px}h2{font-size:25px}h3{font-size:21px}table{font-size:14px}th,td{padding:10px}pre{padding:18px;font-size:12px}.toc{padding:20px}header>a{font-size:22px}}@page{size:A4;margin:17mm 16mm 19mm}@media print{:root{background:white;font-size:10.5pt;line-height:1.65}body{background:white}header{padding:0 0 9mm;max-width:none;border-bottom:1px solid #dce6da}header>a{font-size:20pt}header img{width:30px;height:30px}nav{display:none}main{max-width:none;margin:0;padding:10mm 0 0;border:0;box-shadow:none;border-radius:0}h1{font-size:25pt}h2{font-size:19pt;margin-top:10mm;padding-top:7mm;break-before:page}h3{font-size:14pt;margin-top:7mm}h1,h2,h3{break-after:avoid}p,li{orphans:3;widows:3}table{display:table;font-size:9pt;overflow:visible;table-layout:auto;word-break:break-word}thead{display:table-header-group}tr{break-inside:avoid}th,td{padding:7px 9px}th{white-space:normal}pre{font-size:8pt;border:1px solid #cddccb;color:#1b3c32;background:#f1f6ed;box-shadow:none;break-inside:avoid}code{font-size:.84em}img{max-height:210mm;object-fit:contain;display:block;margin:auto;break-inside:avoid;box-shadow:none}.toc{break-after:page;font-size:10pt}.toc li{font-size:10pt}.toc ul ul{display:none}footer{padding-top:8mm;font-size:8pt}a{color:#136e63}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+.doc-capture{margin:25px 0}.capture-caption{font-size:12px;text-align:center;margin:8px 0 0}.print-capture{display:none}@media print{.doc-capture{margin:5mm 0;break-inside:auto}.screen-capture,.capture-caption{display:none}.print-capture{display:block}.capture-part{break-inside:avoid;margin:0 0 7mm}.capture-part+.capture-part{break-before:page}.capture-part-caption{font-size:8pt;color:#526d5c;line-height:1.5;margin:0 0 3mm}.capture-slice{position:relative;width:100%;overflow:hidden;border:1px solid #d7e3d4;border-radius:0;break-inside:avoid}.capture-slice img{position:absolute;left:0;width:100%;height:auto;max-width:none;max-height:none;margin:0;border:0;border-radius:0;box-shadow:none;display:block}}
+</style></head><body><header><a href="index.html"><img src="assets/logo.svg" alt="">NextRole</a><nav aria-label="문서 탐색"><a href="index.html">서비스 소개</a><a href="user-guide.html">사용자 가이드</a><a href="admin-guide.html">관리자 가이드</a><a href="admin-guide.pdf">PDF</a><a href="admin-guide.md">Markdown</a></nav></header><main><h1 id="nextrole-관리자-가이드">NextRole 관리자 가이드</h1>
+<p><strong>버전 1.0.0 · 한국어 · 2026-09-27</strong></p>
+<p>NextRole은 Go API, React·TypeScript·Mantine 화면, PostgreSQL로 구성된 경력전환 시뮬레이터입니다. 웹 번들·아이콘·폰트를 서비스 이미지에 포함하며, 핵심 분석과 시뮬레이션은 인터넷 또는 외부 AI 없이 실행할 수 있습니다.</p>
+<p>이 문서는 배포 담당자와 서비스 관리자를 위한 운영 가이드입니다. 화면은 실제 서비스에서 합성 데이터를 사용해 촬영했습니다. 별도의 라이브 공급자 인증정보 없이 외부 SSO나 고용24 실서비스 연결이 완료되었다는 의미는 아닙니다.</p>
+<p><a href="index.html">서비스 소개</a> · <a href="user-guide.html">사용자 가이드</a> · <a href="admin-guide.pdf">PDF 내려받기</a> · <a href="admin-guide.md">Markdown 원문</a> · <a href="integrations.md">데이터 연동 상세</a> · <a href="screenshots/index.html">전체 화면 갤러리</a></p>
+<div class="toc"><span class="toctitle">목차</span><ul>
+<li><a href="#구성과-운영-범위">구성과 운영 범위</a></li>
+<li><a href="#오프라인-배포">오프라인 배포</a></li>
+<li><a href="#관리자-공간">관리자 공간</a></li>
+<li><a href="#사용자와-역할-관리">사용자와 역할 관리</a></li>
+<li><a href="#서비스-설정">서비스 설정</a></li>
+<li><a href="#ai-모델-설정">AI 모델 설정</a></li>
+<li><a href="#보안과-개인-키-정책">보안과 개인 키 정책</a></li>
+<li><a href="#점수-모델-관리">점수 모델 관리</a></li>
+<li><a href="#sso-로그인-연동">SSO 로그인 연동</a></li>
+<li><a href="#데이터-연동">데이터 연동</a></li>
+<li><a href="#rest-api와-mcp-운영">REST API와 MCP 운영</a></li>
+<li><a href="#감사-로그와-상태-확인">감사 로그와 상태 확인</a></li>
+<li><a href="#백업복구업그레이드">백업·복구·업그레이드</a></li>
+<li><a href="#운영-문제-해결">운영 문제 해결</a></li>
+<li><a href="#운영-인수인계-체크">운영 인수인계 체크</a></li>
+</ul>
+</div>
+<h2 id="구성과-운영-범위">구성과 운영 범위</h2>
+<pre><code class="language-text">사용자 브라우저
+    │ HTTPS
+조직의 리버스 프록시 / 내부 인증서
+    │ HTTP :8080
+NextRole 서비스 컨테이너
+    ├─ Go API + React 정적 파일 + 한글 폰트 + PDF 추출기
+    ├─ PostgreSQL (조직에서 별도 제공)
+    ├─ 선택: 내부 OIDC / Keycloak
+    ├─ 선택: 내부 OpenAI 호환 AI 서버
+    └─ 선택: 승인된 HTTP API / PostgreSQL / MySQL 데이터 소스
+</code></pre>
+<p>릴리즈 첨부물은 <strong>NextRole 서비스 Docker 이미지만</strong> 압축한 <code>nextrole-v1.0.0.tar.gz</code>입니다. 이미지 태그는 <code>nextrole:v1.0.0</code>이며, PostgreSQL·AI 모델·Keycloak 이미지를 함께 넣지 않습니다. 필요한 기반 서비스는 조직의 반입·운영 절차에 따라 따로 준비합니다. 서비스 표시명은 <code>NextRole</code>, Docker 이름은 레지스트리 규칙에 맞춰 소문자 <code>nextrole</code>을 사용합니다.</p>
+<p>소개 영상·한국어 자막·사용자/관리자 PDF·화면 캡처는 저장소의 <code>docs</code>와 GitHub Pages에서 제공합니다. 이 문서·영상 파일을 Docker 이미지 릴리즈 첨부물에 추가하지 않습니다.</p>
+<h3 id="오프라인-사용의-의미">오프라인 사용의 의미</h3>
+<p>네트워크가 차단되어도 로그인, 경력 입력·로컬 파싱, 직무 비교, 규칙 기반 시뮬레이션, 저장과 개인 키 관리는 동작합니다. 내부 서버에 연결할 수 있다면 사내 SSO·AI·데이터 연동도 사용할 수 있습니다.</p>
+<p>Google·LinkedIn·카카오·네이버·고용24 같은 인터넷 서비스는 해당 서비스까지 연결되어야 사용할 수 있습니다. 폐쇄망에서 외부 데이터를 사용하려면 승인된 데이터 반입 후 내부 API·DB 또는 JSON 가져오기를 사용합니다. 기본 제공 데이터는 합성 모델이며 실제 고용24 원본을 내장한 것으로 해석하지 않습니다.</p>
+<h2 id="오프라인-배포">오프라인 배포</h2>
+<h3 id="준비할-항목">준비할 항목</h3>
+<ul>
+<li>이미지 아키텍처와 맞는 Docker 실행 호스트. 현재 배포 이미지는 릴리즈에 표기된 플랫폼을 확인합니다.</li>
+<li>접근 가능한 PostgreSQL 15 이상과 NextRole 전용 데이터베이스·계정.</li>
+<li>데이터베이스 스키마를 생성·변경할 권한. 서비스 시작 시 테이블을 준비합니다.</li>
+<li>사용자 접속 URL과 운영 환경의 HTTPS 리버스 프록시.</li>
+<li><code>nextrole-v1.0.0.tar.gz</code>, 저장소의 <code>compose.yaml</code>, <code>.env.example</code>.</li>
+<li>안전하게 보관할 관리자 초기 비밀번호와 32바이트 암호화 키.</li>
+</ul>
+<p>리버스 프록시와 데이터베이스는 서비스 컨테이너 외부에서 관리합니다. 대규모 배포에 대한 임의의 성능 수치는 제공하지 않으므로 실제 조직의 사용자·문서·모델 부하로 용량을 검증하세요.</p>
+<h3 id="환경변수-네-개">환경변수 네 개</h3>
+<table>
+<thead>
+<tr>
+<th>이름</th>
+<th>내용</th>
+<th>주의점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POSTGRES_DSN</code></td>
+<td>서비스 자체 데이터베이스 연결 문자열</td>
+<td>비밀번호 URL 인코딩과 TLS 설정 확인</td>
+</tr>
+<tr>
+<td><code>BOOTSTRAP_ADMIN</code></td>
+<td>최초 관리자 이메일</td>
+<td>최초 부트스트랩에 사용</td>
+</tr>
+<tr>
+<td><code>BOOTSTRAP_ADMIN_PASSWORD</code></td>
+<td>최초 관리자 비밀번호</td>
+<td>12~72바이트의 충분히 긴 무작위 값</td>
+</tr>
+<tr>
+<td><code>ENCRYPTION_KEY</code></td>
+<td>무작위 32바이트를 base64 인코딩한 값</td>
+<td>DB의 암호화된 설정 복구에 반드시 필요</td>
+</tr>
+</tbody>
+</table>
+<p>운영 AI 키, SSO Client ID·Secret, 연동 DB DSN 등은 추가 환경변수로 받지 않습니다. 로그인 후 <strong>서비스 관리</strong> 화면에 저장합니다.</p>
+<pre><code class="language-dotenv">POSTGRES_DSN=postgres://nextrole:REPLACE_DATABASE_PASSWORD@postgres.internal:5432/nextrole?sslmode=verify-full
+BOOTSTRAP_ADMIN=admin@example.com
+BOOTSTRAP_ADMIN_PASSWORD=REPLACE_WITH_LONG_RANDOM_PASSWORD
+ENCRYPTION_KEY=REPLACE_WITH_32_BYTE_BASE64_KEY
+</code></pre>
+<p>위의 값은 형식 예시이며 그대로 사용하면 안 됩니다. 암호화 키는 다음 명령으로 생성해 비밀 저장소에 기록합니다.</p>
+<pre><code class="language-bash">openssl rand -base64 32
+</code></pre>
+<p><code>ENCRYPTION_KEY</code>는 로그인 비밀번호나 개인 API 키와 다릅니다. 실행 때마다 새로 만들지 마세요. 기존 키를 바꾸면 DB에 저장된 AI·SSO·커넥터 비밀 설정을 복호화할 수 없습니다. 현재 버전은 이 마스터 키의 온라인 회전 도구를 제공하지 않습니다. 반면 개인 API 키는 사용자 화면에서 회전할 수 있습니다.</p>
+<h3 id="이미지-반입과-시작">이미지 반입과 시작</h3>
+<p>신뢰하는 릴리즈에서 파일을 받아 조직의 무결성·반입 절차를 적용한 뒤 오프라인 호스트로 옮깁니다.</p>
+<pre><code class="language-bash">docker load --input nextrole-v1.0.0.tar.gz
+docker image inspect nextrole:v1.0.0
+cp .env.example .env
+chmod 600 .env
+</code></pre>
+<p><code>.env</code>의 네 값을 실제 환경에 맞게 편집한 다음 시작합니다.</p>
+<pre><code class="language-bash">docker compose up -d
+docker compose ps
+curl --fail http://127.0.0.1:8080/healthz
+</code></pre>
+<p>Compose는 로컬의 <code>nextrole:v1.0.0</code>을 사용하며 인터넷에서 자동으로 이미지를 가져오지 않습니다. 기본 서비스 포트는 8080입니다. <code>localhost</code>를 DB 주소로 쓰면 컨테이너 자신을 가리키므로, 컨테이너에서 도달 가능한 PostgreSQL 주소를 사용합니다.</p>
+<p>서비스 프로세스는 비루트 사용자로 실행합니다. 제공한 Compose는 읽기 전용 루트 파일시스템, 문서 처리용 <code>/tmp</code> 임시 저장소와 제한된 컨테이너 권한을 사용합니다. DB 자료는 컨테이너 교체와 별도로 PostgreSQL에 보존됩니다.</p>
+<h3 id="시작-확인">시작 확인</h3>
+<ol>
+<li><code>/healthz</code>가 <code>status: ok</code>와 버전을 반환하는지 확인합니다.</li>
+<li>로그인 화면에서 최초 관리자 이메일·비밀번호로 로그인합니다.</li>
+<li><strong>서비스 관리 → 서비스 설정</strong>에 실제 HTTPS 서비스 URL을 저장합니다.</li>
+<li><strong>관리 대시보드</strong>에서 PostgreSQL 연결, 버전, 사용자 수를 확인합니다.</li>
+<li><strong>내 경력</strong>에 합성 예시를 입력해 저장 → 시뮬레이션 → 결과 저장을 확인합니다.</li>
+<li>외부 인터넷 연결이 없는 상태에서 화면·폰트·로컬 계산이 동작하는지 확인합니다.</li>
+</ol>
+<p>초기 관리자 환경변수는 기존 계정의 비밀번호 재설정 기능이 아닙니다. 초기 설정 후 비밀번호 변경은 <strong>개인 설정</strong> 또는 관리자의 <strong>사용자 관리</strong>에서 수행합니다. 로그인 복구를 환경변수 수정에 의존하지 말고 운영 계정 복구 절차를 마련하세요.</p>
+<h3 id="프록시와-스트리밍">프록시와 스트리밍</h3>
+<p>공개·조직 서비스 URL은 관리자의 기본 URL과 일치시킵니다. API·웹 경로를 같은 출처에서 제공하세요. 프록시는 <code>/api/v1/ai/stream</code>의 응답을 버퍼링하지 않고 전달해야 합니다. AI가 긴 답변을 생성할 수 있으므로 프록시 응답 타임아웃도 모델 처리시간을 고려합니다.</p>
+<p>SSE 응답에는 <code>Content-Type: text/event-stream</code>과 버퍼링 비활성 지시를 사용합니다. 화면에서 한 글자도 나오지 않다가 한꺼번에 출력된다면 AI 서버와 프록시 양쪽의 스트리밍 설정을 확인합니다. 단순한 로컬 시뮬레이션 API와 장시간 AI 스트림은 서로 다른 응답 특성을 가집니다.</p>
+<h2 id="관리자-공간">관리자 공간</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="관리 대시보드: 서비스 상태와 운영 메뉴" src="screenshots/admin.png" /></div><figcaption class="capture-caption"><a href="screenshots/admin.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">관리 대시보드: 서비스 상태와 운영 메뉴 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1314"><img src="screenshots/admin.png" alt="관리 대시보드: 서비스 상태와 운영 메뉴 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p>왼쪽 <strong>서비스 관리</strong>로 이동하면 관리자 메뉴가 표시됩니다. <strong>개인 공간으로</strong>를 누르면 본인의 경력 공간으로 돌아갑니다. 단순히 메뉴를 숨기는 방식이 아니라 서버에서 관리자 역할을 검사합니다.</p>
+<p>관리 대시보드에서 다음을 확인합니다.</p>
+<ul>
+<li>PostgreSQL 연결 상태와 현재 버전</li>
+<li>전체 사용자·저장 시뮬레이션·데이터 연결 수</li>
+<li>회원가입 허용 여부</li>
+<li>검토·승인 기능 활성 여부</li>
+<li>AI 연결 또는 오프라인 엔진 사용 여부</li>
+<li>합성 데이터 모드</li>
+</ul>
+<h2 id="사용자와-역할-관리">사용자와 역할 관리</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="사용자 관리: 계정, 역할과 활성 상태" src="screenshots/admin-users.png" /></div><figcaption class="capture-caption"><a href="screenshots/admin-users.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">사용자 관리: 계정, 역할과 활성 상태 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/admin-users.png" alt="사용자 관리: 계정, 역할과 활성 상태 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p><strong>사용자 추가</strong>에서 이메일·이름·초기 비밀번호·역할을 지정합니다. 기존 계정은 <strong>수정</strong>으로 이름·역할·활성 상태를 바꾸고 필요한 경우 비밀번호를 재설정합니다.</p>
+<table>
+<thead>
+<tr>
+<th>역할</th>
+<th>권한</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>사용자 <code>user</code></td>
+<td>본인의 경력·결과·키·선호 관리</td>
+</tr>
+<tr>
+<td>검토자 <code>reviewer</code></td>
+<td>개인 기능과 검토 요청 승인·반려</td>
+</tr>
+<tr>
+<td>서비스 관리자 <code>admin</code></td>
+<td>관리 설정·사용자·데이터·감사, 검토 기능과 개인 기능</td>
+</tr>
+</tbody>
+</table>
+<p>계정을 비활성화하면 로그인과 해당 계정의 API 키 사용이 제한됩니다. 역할 변경·비밀번호 재설정·비활성화 시 기존 로그인 세션이 만료될 수 있습니다. 개인 API 키 권한과 계정 역할은 다른 개념이며, 관리자 계정의 개인 키에도 관리자 API 권한을 부여하지 않습니다.</p>
+<p>서비스를 관리할 계정이 남아 있어야 하므로 마지막 활성 관리자의 역할·상태 변경은 제한합니다. 한 사람의 실수로 운영 접근이 끊기지 않도록 관리자 계정을 적절히 관리하세요.</p>
+<h2 id="서비스-설정">서비스 설정</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="서비스 설정: 기본 URL, 회원가입, 합성 데이터와 검토 프로세스" src="screenshots/admin-general.png" /></div><figcaption class="capture-caption"><a href="screenshots/admin-general.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">서비스 설정: 기본 URL, 회원가입, 합성 데이터와 검토 프로세스 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1143"><img src="screenshots/admin-general.png" alt="서비스 설정: 기본 URL, 회원가입, 합성 데이터와 검토 프로세스 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<table>
+<thead>
+<tr>
+<th>설정</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>서비스 이름</td>
+<td>공개 서비스 설정에 저장하는 표시 이름. 제품 브랜드는 NextRole</td>
+</tr>
+<tr>
+<td>서비스 외부 주소</td>
+<td>SSO 콜백과 사용자 접근에 사용하는 전체 기본 URL</td>
+</tr>
+<tr>
+<td>회원가입 허용</td>
+<td>로그인 화면의 직접 가입 활성화. 기본 비활성</td>
+</tr>
+<tr>
+<td>합성 데이터 모드</td>
+<td>연동 결과가 없을 때 합성 교육·채용 예시 제공. 기본 활성</td>
+</tr>
+<tr>
+<td>팀장 검토 · 승인 프로세스</td>
+<td>검토 메뉴와 요청·승인·반려 API 활성화. 기본 비활성</td>
+</tr>
+</tbody>
+</table>
+<p>현재 버전의 내장 직무 모델은 시뮬레이션 기본 카탈로그입니다. 합성 데이터 모드를 끄더라도 내장 직무 모델이 실제 데이터로 바뀌지는 않습니다. 기관에서 검증한 직무를 <code>occupations</code>로 가져와 사용하고 각 결과의 출처를 확인합니다.</p>
+<p>회원가입 설정은 이메일·비밀번호 직접 가입을 제어합니다. SSO 공급자를 활성화하면 그 공급자에서 인증된 새로운 사용자의 최초 접근 계정이 만들어질 수 있으므로, 제한된 조직이라면 IdP 쪽 사용자·그룹 접근도 통제합니다.</p>
+<h3 id="검토-프로세스-운영">검토 프로세스 운영</h3>
+<ol>
+<li><strong>사용자 관리</strong>에서 검토 담당자를 <code>reviewer</code> 또는 <code>admin</code>으로 지정합니다.</li>
+<li><strong>서비스 설정</strong>에서 <strong>팀장 검토 · 승인 프로세스</strong>를 켜고 저장합니다.</li>
+<li>사용자가 저장된 시뮬레이션에서 검토를 요청합니다.</li>
+<li>검토자는 개인 공간의 <strong>검토 · 승인</strong>에서 의견과 함께 승인 또는 반려합니다.</li>
+<li>필요하지 않으면 기능을 끕니다. 메뉴가 사라지고 관련 API도 비활성화됩니다.</li>
+</ol>
+<figure class="doc-capture"><div class="screen-capture"><img alt="선택적 검토·승인 화면" src="screenshots/approvals.png" /></div><figcaption class="capture-caption"><a href="screenshots/approvals.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">선택적 검토·승인 화면 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/approvals.png" alt="선택적 검토·승인 화면 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p>자기 요청 승인·반려는 허용하지 않습니다. 현재는 단일 검토 단계이며 팀 조직도·다단계 승인·팀장 자동 배정을 구현한 것이 아닙니다. 운영 역할을 배정해 필요한 검토 절차에 적용합니다.</p>
+<h2 id="ai-모델-설정">AI 모델 설정</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="AI 설정: 서버, 모델, 스트리밍과 토큰 한도" src="screenshots/admin-ai.png" /></div><figcaption class="capture-caption"><a href="screenshots/admin-ai.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">AI 설정: 서버, 모델, 스트리밍과 토큰 한도 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1386"><img src="screenshots/admin-ai.png" alt="AI 설정: 서버, 모델, 스트리밍과 토큰 한도 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p>기본값은 <strong>AI 비활성</strong>입니다. 핵심 경력 점수는 외부 LLM 응답에 의존하지 않습니다. AI를 사용하려면 OpenAI 호환 <strong>Chat Completions 스트리밍</strong> 엔드포인트를 제공하는 서버를 준비합니다.</p>
+<h3 id="설정-순서">설정 순서</h3>
+<ol>
+<li><strong>AI 모델 연결 사용</strong>을 켭니다.</li>
+<li>API 기본 주소에 모델 서버의 <code>/v1</code>까지 입력합니다. 예: <code>http://model.internal:8000/v1</code>.</li>
+<li>실제 서버가 제공하는 모델 이름을 입력합니다.</li>
+<li>인증이 필요하면 API 키를 입력합니다. 공란 수정은 기존 키를 유지합니다.</li>
+<li>출력 토큰 매개변수와 온도 사용 여부를 해당 서버·모델에 맞춥니다.</li>
+<li><strong>최대 출력 토큰</strong>과 <strong>컨텍스트 윈도우</strong>를 설정합니다.</li>
+<li><strong>설정 저장</strong> 후 <strong>저장된 설정으로 연결 테스트</strong>를 수행합니다.</li>
+<li>개인 공간에서 분석·설명 스트리밍을 실행해 실제 응답을 확인합니다.</li>
+</ol>
+<h3 id="출력-토큰과-컨텍스트는-다릅니다">출력 토큰과 컨텍스트는 다릅니다</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>범위·의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>최대 출력 토큰</td>
+<td>1~262,144. NextRole의 설정 상한이며 모든 모델이 이 출력을 지원한다는 뜻은 아님</td>
+</tr>
+<tr>
+<td>컨텍스트 윈도우</td>
+<td>1,024~2,097,152. 시스템 지시·입력·출력을 함께 담는 참고 한도</td>
+</tr>
+<tr>
+<td>토큰 매개변수</td>
+<td>호환 서버에 따라 <code>max_tokens</code> 또는 <code>max_completion_tokens</code></td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>전송하는 경우 0~2. 모델이 미지원하면 전송 비활성</td>
+</tr>
+<tr>
+<td>AI 요청 제한 시간</td>
+<td>30~14,400초. 기본 3,600초이며 장시간 스트리밍과 프록시 제한을 함께 고려</td>
+</tr>
+</tbody>
+</table>
+<p>최대 출력값은 컨텍스트보다 작거나 같아야 합니다. 실제 호출에서는 시스템 지시와 입력을 위한 공간도 필요하므로 둘을 똑같이 262,144로 놓으면 입력 여유가 없어 요청이 거절될 수 있습니다. 입력 예산은 모델별 토크나이저가 아닌 보수적인 바이트 추정으로 검사합니다. 모델 제공자의 실제 제한에 맞춰 여유를 둡니다.</p>
+<p>기본 출력은 4,096, 컨텍스트는 262,144입니다. 256K 상한을 설정해도 서버의 메모리·시간·출력 한도는 별도로 제한될 수 있습니다. 로컬 모델의 KV 캐시와 동시 사용자 부하까지 고려해 검증하세요.</p>
+<h3 id="스트리밍구조화-결과">스트리밍·구조화 결과</h3>
+<p>AI 호출은 <code>stream: true</code>를 사용합니다. 클라이언트에는 SSE <code>delta</code>, 구조화 분석의 <code>profile</code>, 종료 <code>done</code>, 실패 <code>error</code> 이벤트가 전달됩니다. 사용자가 생성을 중지하거나 연결을 종료하면 요청 취소가 전달됩니다.</p>
+<p>경력 파싱의 AI 결과는 JSON 형식과 범위를 검증하며 추출 역량을 <code>review</code>로 표시합니다. 사용자가 확인하지 않은 역량은 적합도에서 제외합니다. AI 설명에 공고·교육·급여·URL을 새로 만들지 않도록 지시하며 실제 기회 정보는 구조화된 연동 데이터에서 제공합니다. LLM이 생성한 설명은 모델 출력이므로 점수 근거와 대조하는 운영이 필요합니다.</p>
+<p>AI 서버에 보내는 내용에는 경력 서술·프로필·시뮬레이션 근거가 포함될 수 있습니다. 폐쇄망 운영에서는 조직이 승인한 내부 AI 서버 주소를 사용합니다. 기본 주소의 <code>localhost</code>는 컨테이너 자신을 가리킵니다.</p>
+<h2 id="보안과-개인-키-정책">보안과 개인 키 정책</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="보안·키 정책: 세션, 유효기간과 허용 범위" src="screenshots/admin-security.png" /></div><figcaption class="capture-caption"><a href="screenshots/admin-security.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">보안·키 정책: 세션, 유효기간과 허용 범위 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/admin-security.png" alt="보안·키 정책: 세션, 유효기간과 허용 범위 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<table>
+<thead>
+<tr>
+<th>설정</th>
+<th style="text-align: right;">범위</th>
+<th style="text-align: right;">기본값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>세션 유지 시간</td>
+<td style="text-align: right;">1~168시간</td>
+<td style="text-align: right;">12시간</td>
+</tr>
+<tr>
+<td>개인 API 키 최대 유효기간</td>
+<td style="text-align: right;">1~365일</td>
+<td style="text-align: right;">90일</td>
+</tr>
+<tr>
+<td>허용 범위</td>
+<td style="text-align: right;">지원하는 권한 중 선택</td>
+<td style="text-align: right;">지원 범위 전체</td>
+</tr>
+</tbody>
+</table>
+<p>지원 범위는 <code>profile:read</code>, <code>profile:write</code>, <code>jobs:read</code>, <code>simulate:write</code>, <code>ai:use</code>, <code>mcp:use</code>입니다. 허용 목록을 줄이면 기존 키도 매 요청에서 새 정책의 제한을 받습니다. 최대 발급 기간을 바꾼다고 이미 만들어진 키의 만료일을 자동으로 소급 변경하지 않습니다.</p>
+<p>개인 키는 소유자별로 관리하고 원문은 발급·회전 직후 한 번만 표시합니다. 서버에는 원문 대신 해시가 저장됩니다. 회전은 같은 키 기록의 인증 원문을 바꾸므로 구버전 키가 즉시 무효화되고 기존 만료일은 유지됩니다.</p>
+<p>관리 설정의 민감한 값은 <code>ENCRYPTION_KEY</code>로 AES-GCM 암호화해 DB에 저장합니다. 사용자 비밀번호는 bcrypt, 세션과 API 토큰은 다이제스트 형태로 저장합니다. 관리 API에서 Client Secret·AI 키·연동 DSN의 원문을 다시 반환하지 않습니다.</p>
+<p>서비스 설정의 비밀값 보호가 모든 DB 데이터를 암호화한다는 뜻은 아닙니다. 경력·시뮬레이션과 사용자 자료는 PostgreSQL 보안, 백업 암호화, 접근 권한과 디스크 암호화를 별도로 적용합니다.</p>
+<h2 id="점수-모델-관리">점수 모델 관리</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="점수 모델: 여섯 요소 가중치 편집" src="screenshots/admin-scoring.png" /></div><figcaption class="capture-caption"><a href="screenshots/admin-scoring.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">점수 모델: 여섯 요소 가중치 편집 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/admin-scoring.png" alt="점수 모델: 여섯 요소 가중치 편집 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p>가중치 합계는 100으로 설정합니다. 기본값은 기술역량 40, 전이 가능 역량 20, 경력 15, 산업경험 10, 교육·자격 5, 개인 선호 10입니다. 저장 후의 추천·재계산에 적용되며 이전 저장 결과를 자동으로 다시 쓰지 않습니다.</p>
+<p>추천 정렬은 별도로 <code>적합도 + 선호 3점 + min(3, log2(관련 실제 공고 수 + 1))</code>의 보정을 사용합니다. 비선호 직무는 제외합니다. 이 보정은 정렬에만 사용하며 반환되는 여섯 요소 적합도 점수에는 합산하지 않습니다. 관련 실제 공고가 없으면 수요 보정은 0입니다.</p>
+<h3 id="계산-원리">계산 원리</h3>
+<ul>
+<li><strong>기술역량</strong>: 검증된 현재 수준을 요구 수준으로 나눈 값의 중요도 가중 평균.</li>
+<li><strong>전이 가능 역량</strong>: 명시적인 로컬 특징 벡터의 코사인 유사도. 다른 기술의 유사도 기여는 최대 60%로 제한.</li>
+<li><strong>경력</strong>: 입력 총 경력 / 참고 경력, 상한 적용. 목표 직무 관련성은 다른 요소에서 함께 확인.</li>
+<li><strong>산업경험</strong>: 동일 산업은 일치, 정의된 인접 산업은 부분 일치, 미입력은 0.</li>
+<li><strong>교육·자격</strong>: 학력 참고 요건 비교. 자격증별 검증 매핑이 없으면 이름만으로 가산하지 않음.</li>
+<li><strong>개인 선호</strong>: 직무·분류 일치와 희망지역. 지역만 일치하면 요소의 절반까지.</li>
+</ul>
+<p>별칭을 정규화하고 같은 역량 중복 입력은 점수를 중복 합산하지 않습니다. 추론·검증필요 항목은 확인 전 제외합니다. 로컬 특징 벡터는 외부 임베딩 모델이나 pgvector 서버가 필요 없는 결정적 의미 비교입니다. 현재 버전에 학습된 노동시장 예측 모델이나 실제 채용 성공 확률 모델이 포함되어 있다고 설명하지 마세요.</p>
+<p>경력 공백은 <code>careerBreakMonths</code>(0~600개월)로 기록합니다. 공백 자체에 따른 점수 감점은 없으며, 최근 도구·업무 변화 점검과 복귀 프로젝트를 로드맵 첫 단계에 추가합니다.</p>
+<p>난이도는 100에서 적합도를 뺀 값입니다. 계획 기간만 바꿔도 역량을 자동 취득한 것으로 보지 않으므로 점수는 동일합니다. 학습기간·비용은 합성 가정이며 실제 교육비와 구직기간은 따로 확인합니다.</p>
+<h2 id="sso-로그인-연동">SSO 로그인 연동</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="SSO 관리: 공급자 목록과 콜백 URI" src="screenshots/admin-providers.png" /></div><figcaption class="capture-caption"><a href="screenshots/admin-providers.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">SSO 관리: 공급자 목록과 콜백 URI · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/admin-providers.png" alt="SSO 관리: 공급자 목록과 콜백 URI · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<p>Google·LinkedIn·카카오·네이버는 공급자 기본값을 사용하고, Keycloak·일반 OIDC는 발급자 메타데이터를 탐색합니다. 일반 OAuth 2.0은 인가·토큰·사용자정보 URL과 필드 매핑을 지정합니다.</p>
+<h3 id="공통-연결-순서">공통 연결 순서</h3>
+<ol>
+<li>공급자 콘솔에서 애플리케이션을 등록하고 Client ID·Secret을 준비합니다.</li>
+<li><strong>서비스 설정 → 서비스 외부 주소</strong>에 실제 서비스 URL을 저장합니다.</li>
+<li><strong>SSO 로그인 연동 → SSO 연결 추가</strong>에서 공급자 유형·이름·Client ID·Secret을 입력합니다.</li>
+<li>우선 비활성 상태로 저장해 고유 설정 ID와 <strong>리디렉션 URI</strong>를 확인합니다.</li>
+<li>공급자 콘솔에 화면에 표시된 URI를 정확히 등록합니다.</li>
+<li>필요한 동의 항목·테스트 사용자·앱 이용 권한을 설정합니다.</li>
+<li>NextRole에서 연결을 활성화하고 로그인 화면의 버튼으로 실제 인증을 확인합니다.</li>
+</ol>
+<p>콜백 형식은 다음과 같습니다. <code>{provider-id}</code>를 <code>google</code> 같은 공급자 유형 이름으로 임의로 바꾸지 말고 저장 후 화면에 나온 값을 사용합니다.</p>
+<pre><code class="language-text">https://nextrole.example.com/api/v1/auth/sso/{provider-id}/callback
+</code></pre>
+<p>Client Secret을 빈칸으로 수정하면 기존 값을 유지합니다. 값을 다시 보고 싶어도 원문은 반환되지 않습니다. 변경은 공급자에서 새 Secret을 발급한 뒤 NextRole에 덮어쓰는 방식으로 수행합니다.</p>
+<h3 id="공급자별-준비사항">공급자별 준비사항</h3>
+<table>
+<thead>
+<tr>
+<th>제공자</th>
+<th>NextRole 기본값</th>
+<th>공급자에서 확인할 항목</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Google</td>
+<td>OIDC, <code>openid profile email</code></td>
+<td>OAuth 클라이언트·동의 화면·정확한 리디렉션 URI</td>
+</tr>
+<tr>
+<td>LinkedIn</td>
+<td>OIDC, <code>openid profile email</code></td>
+<td>앱의 Sign In with LinkedIn using OpenID Connect 제품 권한</td>
+</tr>
+<tr>
+<td>카카오</td>
+<td>OIDC, <code>openid profile_nickname account_email</code></td>
+<td>카카오 로그인 ON, OpenID Connect ON, REST API 키·Secret, 동의 항목</td>
+</tr>
+<tr>
+<td>네이버</td>
+<td>OAuth 2.0, 사용자정보 <code>response.*</code></td>
+<td>네이버 로그인 애플리케이션, Callback URL, 필요한 이용자 정보</td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td>OIDC, 조직 Issuer 입력</td>
+<td>Client ID·Secret, Standard Flow, 콜백 URI, realm 사용자 접근</td>
+</tr>
+<tr>
+<td>일반 OIDC</td>
+<td>Issuer 메타데이터 자동 탐색</td>
+<td>discovery와 JWKS·토큰 엔드포인트 접근</td>
+</tr>
+<tr>
+<td>일반 OAuth 2.0</td>
+<td>URL·필드 수동 지정</td>
+<td>인가 코드 흐름과 사용자정보 고유 식별자</td>
+</tr>
+</tbody>
+</table>
+<p>Google은 콘솔의 리디렉션 URI와 요청 URI가 정확히 일치해야 합니다. <a href="https://developers.google.com/identity/openid-connect/openid-connect">Google OIDC 공식 문서</a></p>
+<p>LinkedIn 앱에 OIDC 로그인 제품 접근을 준비합니다. <a href="https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2">LinkedIn OIDC 공식 문서</a></p>
+<p>카카오의 현재 기본 설정은 ID 토큰을 사용하므로 OpenID Connect도 활성화해야 합니다. REST API 키의 Secret과 이메일 동의 범위를 확인합니다. <a href="https://developers.kakao.com/docs/ko/kakaologin/prerequisite">카카오 로그인 설정 공식 문서</a></p>
+<p>네이버는 OIDC로 가정하지 않고 OAuth 인증 후 사용자정보 API의 <code>response.id</code>, <code>response.email</code>, <code>response.name</code>을 매핑합니다. <a href="https://developers.naver.com/docs/login/devguide/devguide.md">네이버 로그인 개발가이드</a></p>
+<h3 id="keycloak-오프라인-예시">Keycloak 오프라인 예시</h3>
+<p>Issuer 예시:</p>
+<pre><code class="language-text">https://sso.internal.example/realms/nextrole
+</code></pre>
+<p><code>/.well-known/openid-configuration</code> 자체가 아니라 realm의 발급자 URL을 입력합니다. Keycloak의 discovery 경로는 해당 realm 아래에서 제공됩니다. <a href="https://www.keycloak.org/securing-apps/oidc-layers">Keycloak OIDC 공식 문서</a></p>
+<p>Client 인증을 사용하는 웹 애플리케이션을 만들고 인가 코드 흐름과 필요한 scope를 설정합니다. 내부 DNS와 인증서 신뢰가 NextRole 서버·사용자 브라우저 모두에서 동작해야 합니다. 서버가 보는 Issuer와 ID 토큰의 Issuer가 다르면 검증이 실패합니다.</p>
+<h3 id="계정-식별과-제한">계정 식별과 제한</h3>
+<p>OIDC는 서명·Issuer·대상 클라이언트·만료·nonce를 검증하고, 인증 시작 상태는 한 번만 사용합니다. 공급자 설정이 로그인 도중 바뀌면 다시 로그인해야 합니다.</p>
+<p>SSO 계정은 공급자 설정 ID와 고유 subject를 기준으로 식별합니다. 이메일이 같다는 이유만으로 기존 계정과 자동 연결하지 않습니다. 기존 사용자와 충돌하면 중복 안내가 나오며 기존 계정을 사용해야 합니다. 공급자를 삭제 후 새로 만들면 설정 ID가 달라지므로 기존 연결과 다른 공급자로 처리될 수 있습니다.</p>
+<p>현재 버전은 조직 IdP 그룹을 관리자 역할로 자동 매핑하지 않습니다. SSO 신규 사용자는 일반 사용자이며 역할은 관리자가 변경합니다. NextRole 로그아웃은 서비스 세션을 종료하며 IdP의 전역 로그아웃을 대신하지 않습니다.</p>
+<h2 id="데이터-연동">데이터 연동</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="데이터 연동: 커넥터 목록과 테스트·동기화" src="screenshots/admin-connectors.png" /></div><figcaption class="capture-caption"><a href="screenshots/admin-connectors.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">데이터 연동: 커넥터 목록과 테스트·동기화 · 1/1</p><div class="capture-slice" style="aspect-ratio:1440/1050"><img src="screenshots/admin-connectors.png" alt="데이터 연동: 커넥터 목록과 테스트·동기화 · 1/1" style="top:0.00000000%"></div></div></div></figure>
+<h3 id="지원-형식과-데이터-종류">지원 형식과 데이터 종류</h3>
+<table>
+<thead>
+<tr>
+<th>연결</th>
+<th>사용 예</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSON API</td>
+<td>사내 경력·직무·채용·교육 API</td>
+</tr>
+<tr>
+<td>XML API</td>
+<td>고용24 및 레거시 데이터</td>
+</tr>
+<tr>
+<td>CSV</td>
+<td>내부 HTTP 서버가 배포하는 승인 데이터</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>조회 전용 계정으로 승인된 뷰 SELECT</td>
+</tr>
+<tr>
+<td>MySQL 8</td>
+<td>교육·채용 데이터 뷰 SELECT</td>
+</tr>
+<tr>
+<td>JSON 가져오기</td>
+<td>오프라인 반입 파일·직접 입력</td>
+</tr>
+</tbody>
+</table>
+<p><code>occupations</code>는 요구 수준을 가진 목표 직무 사전, <code>jobs</code>는 실제 채용공고, <code>training</code>은 교육·훈련 과정입니다. 채용공고를 직무 사전으로 잘못 넣지 마세요.</p>
+<h3 id="연결-구성-순서">연결 구성 순서</h3>
+<ol>
+<li><strong>연결 추가</strong>를 선택하고 이름·형식·용도를 지정합니다.</li>
+<li>HTTP는 최종 URL, GET/POST, 인증키 전달 방식과 매개변수를 입력합니다.</li>
+<li>DB는 별도의 읽기 전용 계정 DSN과 SELECT 조회를 입력합니다.</li>
+<li><code>rootPath</code>에 목록 경로를 지정합니다. 예: JSON <code>data.items</code>, XML <code>wantedRoot.wanted</code>.</li>
+<li>원본 필드를 NextRole 필드로 매핑합니다.</li>
+<li><strong>연결 저장 → 연결 테스트</strong>에서 변환된 레코드를 확인합니다.</li>
+<li>출처·고유 ID·제목·링크·역량·숫자 변환이 맞으면 <strong>동기화</strong>합니다.</li>
+<li>사용자 공간에서 실제 데이터와 출처 표시를 확인합니다.</li>
+</ol>
+<p>HTTP 키가 query를 사용하는 경우 <strong>인증키 쿼리 매개변수</strong>에 <code>authKey</code> 등을 넣습니다. 키 원문은 <strong>API 인증키</strong>에 저장하며 URL·일반 매개변수·본문에 직접 넣지 않습니다. Bearer 헤더가 필요하면 인증키 값에 <code>Bearer 발급값</code>을 사용합니다.</p>
+<p>테스트는 현재 설정의 한 페이지 또는 한 SQL 조회를 검사합니다. 동기화도 같은 범위이며 전체 페이지 자동 순회·정기 스케줄러는 포함하지 않습니다. 대량·정기 수집은 내부 게이트웨이에서 처리하거나 페이지 조건을 바꾸어 동기화합니다.</p>
+<h3 id="매핑-예제">매핑 예제</h3>
+<p>원본이 <code>{"data":{"items":[{"code":"j1","name":"백엔드 개발자","company":"기관","tags":["Java"]}]}}</code>인 경우 목록 경로는 <code>data.items</code>입니다.</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;code&quot;,
+  &quot;title&quot;: &quot;name&quot;,
+  &quot;organization&quot;: &quot;company&quot;,
+  &quot;skills&quot;: &quot;tags&quot;,
+  &quot;source.name&quot;: &quot;=기관 채용 API&quot;,
+  &quot;source.synthetic&quot;: &quot;=false&quot;
+}
+</code></pre>
+<p>상수는 <code>=</code>로 시작합니다. 배열의 값은 <code>tags[].label</code>처럼 매핑할 수 있습니다. 매핑을 지정하면 선택한 필드만 가져오므로 필요한 원문 URL과 출처도 포함하세요. 소스에 없는 공고·훈련 URL을 만들어 넣지 않습니다.</p>
+<p>직무 역량은 문자열 목록이 아니라 <code>[{"name":"Python","level":4,"weight":1}]</code> 형식입니다. 기관의 NCS 수준과 NextRole 내부 수준(0~5)을 동일시하지 말고 담당자가 승인한 매핑을 사용합니다. 자세한 형식·고용24 실제 설정 예시는 <a href="integrations.md">데이터 연동 상세 가이드</a>를 참고합니다.</p>
+<h3 id="조회-제한과-동기화-유의점">조회 제한과 동기화 유의점</h3>
+<p>연동 어댑터는 HTTP 응답 10 MiB, 최대 5,000건, 연결 20초, SQL 실행 15초 등의 제한을 둡니다. XML 외부 엔티티·DTD, SQL 쓰기·다중문·위험 함수, HTTP 리디렉션은 허용하지 않습니다. 내부 URL에 접근하는 관리자 기능이므로 신뢰하는 운영자에게만 관리 권한을 부여합니다.</p>
+<p>같은 원본 ID는 해당 출처의 기록을 갱신합니다. 연동 출처마다 ID를 구분해 충돌을 줄입니다. 커넥터 삭제와 이미 가져온 데이터의 제거 범위는 현재 서비스 응답을 확인하며, 원본 시스템과 완전한 양방향 삭제 동기화를 수행한다고 가정하지 않습니다.</p>
+<p>DB 정적 SQL 검사와 읽기 전용 트랜잭션은 실제 계정 권한을 대체하지 않습니다. 전용 계정에 승인된 뷰 SELECT만 부여하고 위험한 사용자 정의 함수·파일 접근 권한을 주지 않습니다.</p>
+<h3 id="실제-채용-시장-패널">실제 채용 시장 패널</h3>
+<p>사용자의 교육·채용 화면은 <code>/api/v1/market</code>의 실제 공고 집계를 함께 표시합니다. 지역별 기회, 요구 역량 변화와 공개 급여를 수집 데이터 범위 안에서 제공합니다. 기본 합성 공고는 집계하지 않으며, 과거 관측이 없으면 추세 비교를 표시하지 않습니다. 급여는 원본 표기를 보존합니다. 서로 다른 단위나 불완전한 표본으로 평균 연봉·시장 전체 수요를 만들어내지 않습니다.</p>
+<p>유효 마감일 또는 상시채용 상태가 확인된 공고만 집계하며, 마감일 미제공·해석 불가 공고는 제외 건수로 안내합니다. 같은 URL은 중복 제거하고 지역은 원문의 구분값을 유지합니다. 직무별 관련성은 제목 일치 또는 서로 다른 요구 역량 2개 이상의 일치로 판단합니다.</p>
+<p>공고 수입 후 한국 시간 기준 일별 관측값을 저장합니다. 다른 날짜의 가장 최근 관측과 비교하며 <code>change</code>는 백분율이 아닌 공고 건수 차이입니다. 목표 직무명·요구역량이 바뀌면 비교 기준이 달라져 이전 관측을 사용하지 않습니다. 집계에 필요한 실제 공고와 안정적인 ID·역량·지역·원문·날짜를 매핑하고 수집 범위를 운영자가 기록하세요. 공고 수가 작거나 수집 페이지가 달라진 경우 이를 실제 노동시장 변화와 동일하게 해석하지 않습니다. 자세한 산식과 스키마는 <a href="market-data.md">채용 시장 데이터 가이드</a>를 참고하세요.</p>
+<h3 id="json-직접-가져오기">JSON 직접 가져오기</h3>
+<p><strong>JSON 가져오기</strong>에서 데이터 용도와 레코드 배열을 입력하거나 <code>.json</code> 파일을 선택합니다. 관리자가 승인한 원본 출처를 기록하세요. 간단한 직무 레코드 예시는 다음과 같습니다.</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: &quot;internal-platform&quot;,
+    &quot;title&quot;: &quot;사내 플랫폼 엔지니어&quot;,
+    &quot;category&quot;: &quot;개발·인프라&quot;,
+    &quot;description&quot;: &quot;기관에서 검증한 직무 정의&quot;,
+    &quot;skills&quot;: [
+      {&quot;name&quot;:&quot;Go&quot;,&quot;level&quot;:4,&quot;weight&quot;:1},
+      {&quot;name&quot;:&quot;Linux&quot;,&quot;level&quot;:3,&quot;weight&quot;:1}
+    ],
+    &quot;minExperience&quot;: 3,
+    &quot;domain&quot;: &quot;IT&quot;,
+    &quot;education&quot;: &quot;무관&quot;,
+    &quot;regions&quot;: [&quot;서울&quot;],
+    &quot;bridgeIds&quot;: [],
+    &quot;source&quot;: {&quot;name&quot;:&quot;사내 승인 직무 사전&quot;,&quot;url&quot;:&quot;&quot;,&quot;synthetic&quot;:false}
+  }
+]
+</code></pre>
+<p>운영 JSON에는 실제로 검증한 자료만 사용합니다. 단지 파일을 가져왔다는 사실이 원본 데이터의 사실성이나 이용 허가를 증명하는 것은 아닙니다.</p>
+<h2 id="rest-api와-mcp-운영">REST API와 MCP 운영</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="API·MCP 연결 안내 화면" src="screenshots/api.png" /></div><figcaption class="capture-caption"><a href="screenshots/api.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">API·MCP 연결 안내 화면 · 1/2</p><div class="capture-slice" style="aspect-ratio:1440/757"><img src="screenshots/api.png" alt="API·MCP 연결 안내 화면 · 1/2" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">API·MCP 연결 안내 화면 · 2/2</p><div class="capture-slice" style="aspect-ratio:1440/756"><img src="screenshots/api.png" alt="API·MCP 연결 안내 화면 · 2/2" style="top:-100.13227513%"></div></div></div></figure>
+<p>API 명세는 <code>/api/v1/openapi.json</code>에서 확인합니다. 사용자 데이터 API는 Bearer 키 범위와 소유자를 검사합니다. 관리자 API는 관리자 로그인 세션으로만 접근하며 개인 키로 관리자 작업을 수행하지 않습니다.</p>
+<p>MCP 엔드포인트는 <code>/mcp</code>와 <code>/api/v1/mcp</code>입니다. HTTP POST JSON-RPC로 <code>initialize</code>, <code>ping</code>, <code>tools/list</code>, <code>tools/call</code>과 알림을 지원합니다. 클라이언트별 원격 HTTP·Bearer 헤더 지원 여부를 확인하세요. 브라우저 쿠키를 외부 AI 도구에 전달하지 말고 전용 개인 키를 사용합니다.</p>
+<table>
+<thead>
+<tr>
+<th>도구</th>
+<th>필요한 범위</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>career_profile</code></td>
+<td><code>mcp:use</code> + <code>profile:read</code></td>
+</tr>
+<tr>
+<td><code>job_search</code></td>
+<td><code>mcp:use</code> + <code>jobs:read</code></td>
+</tr>
+<tr>
+<td><code>career_simulate</code></td>
+<td><code>mcp:use</code> + <code>simulate:write</code></td>
+</tr>
+<tr>
+<td><code>career_opportunities</code></td>
+<td><code>mcp:use</code> + <code>jobs:read</code></td>
+</tr>
+</tbody>
+</table>
+<p>도구 목록은 권한에 맞춰 반환하며 호출 때도 다시 검사합니다. MCP 시뮬레이션은 프로필을 변경하거나 계산 결과를 저장하지 않습니다. REST의 저장 옵션은 별도입니다.</p>
+<h2 id="감사-로그와-상태-확인">감사 로그와 상태 확인</h2>
+<figure class="doc-capture"><div class="screen-capture"><img alt="감사 로그: 작업자, 작업, 대상과 일시" src="screenshots/admin-audit.png" /></div><figcaption class="capture-caption"><a href="screenshots/admin-audit.png">원본 화면을 크게 보기 ↗</a></figcaption><div class="print-capture"><div class="capture-part"><p class="capture-part-caption">감사 로그: 작업자, 작업, 대상과 일시 · 1/3</p><div class="capture-slice" style="aspect-ratio:1440/1027"><img src="screenshots/admin-audit.png" alt="감사 로그: 작업자, 작업, 대상과 일시 · 1/3" style="top:0.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">감사 로그: 작업자, 작업, 대상과 일시 · 2/3</p><div class="capture-slice" style="aspect-ratio:1440/1027"><img src="screenshots/admin-audit.png" alt="감사 로그: 작업자, 작업, 대상과 일시 · 2/3" style="top:-100.00000000%"></div></div><div class="capture-part"><p class="capture-part-caption">감사 로그: 작업자, 작업, 대상과 일시 · 3/3</p><div class="capture-slice" style="aspect-ratio:1440/1026"><img src="screenshots/admin-audit.png" alt="감사 로그: 작업자, 작업, 대상과 일시 · 3/3" style="top:-200.19493177%"></div></div></div></figure>
+<p><strong>감사 로그</strong>에서 로그인, 관리자 설정, 사용자 역할, SSO·커넥터, 키 관리와 AI 관련 주요 작업을 조회합니다. 검색창으로 작업자·작업·대상을 좁힐 수 있습니다. 감사 로그가 모든 페이지 조회와 외부 시스템의 세부 응답을 기록하는 것은 아닙니다.</p>
+<p>민감한 원격 오류 본문이나 인증키를 화면에 그대로 표시하지 않습니다. 기본 로그 보존과 보관 정책은 조직 PostgreSQL·로그 시스템에서 별도로 운영하세요. 서비스 로그는 다음 명령으로 확인할 수 있습니다.</p>
+<pre><code class="language-bash">docker compose logs --tail=200 nextrole
+</code></pre>
+<p>서비스 상태는 <code>/healthz</code>, 관리자 상세 상태는 <code>/api/v1/admin/status</code>에서 확인합니다. 공개 헬스 응답에는 민감한 계정 수·연동 정보가 포함되지 않습니다.</p>
+<h2 id="백업복구업그레이드">백업·복구·업그레이드</h2>
+<h3 id="백업-범위">백업 범위</h3>
+<p>다음을 서로 안전하게 관리합니다.</p>
+<ol>
+<li>PostgreSQL의 NextRole 데이터 전체: 사용자·프로필·설정·저장 결과·연동 데이터·감사 기록.</li>
+<li>원본 <code>ENCRYPTION_KEY</code>: DB 암호화 설정 복호화에 필요.</li>
+<li>운영 <code>.env</code>, Compose, 프록시·TLS 구성의 안전한 사본.</li>
+<li>현재 사용한 서비스 이미지와 정확한 버전.</li>
+</ol>
+<p>PostgreSQL 백업에는 경력 등 개인정보가 포함되므로 접근과 암호화를 적용합니다. 데이터베이스 덤프와 암호화 키를 함께 노출하지 않습니다. 다음은 DB 담당자가 사용 가능한 PostgreSQL 도구에서 수행하는 예시이며 암호는 비밀 저장소 또는 <code>.pgpass</code> 등으로 공급합니다.</p>
+<pre><code class="language-bash">pg_dump --host=postgres.internal --username=nextrole \
+  --dbname=nextrole --format=custom --file=nextrole-backup.dump
+</code></pre>
+<p>복구는 운영 DB를 즉시 덮어쓰기 전에 별도 복구 DB에서 먼저 검증합니다. 동일 버전 이미지와 <strong>원래 암호화 키</strong>로 로그인, 설정 조회, 저장 결과를 확인한 뒤 운영 전환합니다. 백업 파일만 있고 암호화 키가 없으면 비밀 설정은 복구할 수 없습니다.</p>
+<h3 id="업그레이드-순서">업그레이드 순서</h3>
+<ol>
+<li>릴리즈 변경 내용과 대상 플랫폼을 확인합니다.</li>
+<li>현재 DB·암호화 키·운영 설정을 백업합니다.</li>
+<li>새 <code>nextrole-v버전.tar.gz</code>를 반입하고 <code>docker load</code>합니다.</li>
+<li>별도 환경에서 기존 DB 사본과 새 이미지의 호환성을 점검합니다.</li>
+<li>Compose 이미지 태그를 정확한 <code>nextrole:v버전</code>으로 바꿉니다.</li>
+<li>유지보수 시간에 <code>docker compose up -d</code>를 실행합니다.</li>
+<li>헬스, 로그인, 프로필, 시뮬레이션, 연결·키·SSO를 확인합니다.</li>
+</ol>
+<p>DB 스키마가 바뀐 릴리즈의 롤백은 이미지 태그만 되돌려서 안전하다고 가정하지 않습니다. 검증한 이미지·DB·설정 조합으로 복구합니다. <code>latest</code> 태그에 의존하지 않고 명시적 버전을 사용합니다.</p>
+<h2 id="운영-문제-해결">운영 문제 해결</h2>
+<table>
+<thead>
+<tr>
+<th>증상</th>
+<th>점검 순서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시작 시 환경변수 오류</td>
+<td>네 값 존재, 비밀번호 12~72바이트, base64 디코딩 후 32바이트 키</td>
+</tr>
+<tr>
+<td>PostgreSQL 연결 실패</td>
+<td>컨테이너 DNS·경로·방화벽, DSN 인코딩, 계정, TLS 인증서</td>
+</tr>
+<tr>
+<td>설정 복호화 실패</td>
+<td>DB를 만들 때 사용한 원래 ENCRYPTION_KEY인지 확인</td>
+</tr>
+<tr>
+<td>로그인 성공 후 API 오류</td>
+<td>동일 출처 URL, 프록시 Host·HTTPS, 세션 만료</td>
+</tr>
+<tr>
+<td>새로고침 시 404</td>
+<td>프록시가 하위 경로를 NextRole로 전달하는지 확인</td>
+</tr>
+<tr>
+<td>SSO 메타데이터 실패</td>
+<td>Issuer, DNS·TLS, discovery 접근, IdP 상태</td>
+</tr>
+<tr>
+<td>SSO callback mismatch</td>
+<td>저장된 기본 URL, 실제 provider ID, 콘솔 URI 정확 일치</td>
+</tr>
+<tr>
+<td>SSO ID 토큰 없음</td>
+<td>공급자 OIDC 활성과 openid scope</td>
+</tr>
+<tr>
+<td>AI 연결 테스트 실패</td>
+<td>설정 저장, <code>/v1</code> 주소, 모델명·키, streaming 지원</td>
+</tr>
+<tr>
+<td>AI context 예산 초과</td>
+<td>출력 상한을 줄여 입력 공간 확보, 실제 모델 컨텍스트 확인</td>
+</tr>
+<tr>
+<td>AI가 한꺼번에 출력</td>
+<td>프록시 버퍼링, 서버 Content-Type과 SSE 형식</td>
+</tr>
+<tr>
+<td>커넥터 301/302</td>
+<td>리디렉션 이후 최종 주소를 직접 등록</td>
+</tr>
+<tr>
+<td>데이터 목록 없음</td>
+<td>실제 오류 응답, rootPath, 지역·직무 매칭, 출처와 수집 범위</td>
+</tr>
+<tr>
+<td>SQL 테스트 실패</td>
+<td>읽기 전용 계정, SELECT 문법, 뷰·함수 권한과 실행시간</td>
+</tr>
+<tr>
+<td>API 키가 403</td>
+<td>키 범위와 현재 서비스 허용 범위 둘 다 점검</td>
+</tr>
+<tr>
+<td>검토 메뉴 없음</td>
+<td>approvalEnabled 활성 여부와 사용자 역할</td>
+</tr>
+<tr>
+<td>PDF 추출 실패</td>
+<td>텍스트 PDF 여부, 암호화, 크기·페이지, 내장 pdftotext</td>
+</tr>
+</tbody>
+</table>
+<h2 id="운영-인수인계-체크">운영 인수인계 체크</h2>
+<ul>
+<li>서비스와 릴리즈 버전, 이미지 태그·플랫폼을 기록했습니다.</li>
+<li>네 환경변수와 암호화 키 복구 위치를 확인했습니다.</li>
+<li>PostgreSQL 백업·복구를 별도 환경에서 실제 수행했습니다.</li>
+<li>로컬 관리자 로그인과 필요한 SSO 공급자의 실제 로그인을 검증했습니다.</li>
+<li>합성 예시와 운영 데이터를 구분하고 담당자가 출처를 검증했습니다.</li>
+<li>AI를 켰다면 모델별 토큰·컨텍스트·스트리밍 제한을 검증했습니다.</li>
+<li>키 회전 후 이전 키가 거절되고 새 키가 동작하는지 확인했습니다.</li>
+<li>검토 절차를 쓰지 않으면 비활성 상태임을 확인했습니다.</li>
+<li>모바일과 하위 메뉴 새로고침, 저장 후 재접속을 확인했습니다.</li>
+<li>사용자에게 적합도가 취업 확률이 아니라는 안내를 전달했습니다.</li>
+</ul>
+<p>외부 공급자의 콘솔·정책은 변경될 수 있습니다. 위 링크의 공식 문서와 현재 조직의 계약·네트워크 조건을 함께 확인하세요.</p></main><footer>NextRole v1.0.0 · 경력의 다음 가능성을 실험하다.</footer></body></html>
