@@ -80,6 +80,8 @@ func TestIntegration(t *testing.T) {
 	call("GET", "/api/v1/me", nil, "", 401)
 	login := call("POST", "/api/v1/auth/login", map[string]any{"email": "admin@example.test", "password": "Test-NextRole-Password42"}, "", 200)
 	uid := login["user"].(map[string]any)["id"].(string)
+	policy := call("GET", "/api/v1/privacy", nil, "", 200)
+	call("POST", "/api/v1/privacy/consent", map[string]any{"version": policy["version"], "accepted": true}, "", 200)
 	call("GET", "/api/v1/admin/status", nil, "", 200)
 	req, _ := http.NewRequest("PUT", ts.URL+"/api/v1/me", strings.NewReader(`{"name":"attack"}`))
 	req.Header.Set("Origin", "https://other.example")

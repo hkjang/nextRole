@@ -69,6 +69,12 @@ func profileHasEvidence(p Profile) bool {
 func scoreProfile(p Profile, job Job, w Weights) (float64, []Factor, []Gap, []string) {
 	w = normalizeWeights(w)
 	skills := verifiedSkills(p)
+	// Reviewed aliases belong to this job model only; never mutate a user's skills.
+	for alias, canonical := range job.SkillAliases {
+		if level := skills[NormalizeSkill(alias)]; level > skills[NormalizeSkill(canonical)] {
+			skills[NormalizeSkill(canonical)] = level
+		}
+	}
 	reqs := requirements(job)
 	gaps := []Gap{}
 	strengths := []string{}
@@ -111,6 +117,16 @@ func scoreProfile(p Profile, job Job, w Weights) (float64, []Factor, []Gap, []st
 	domain := domainMatch(p.Domain, job.Domain)
 	education := educationMatch(p.Education, job.Education, profileHasEvidence(p))
 	preference := preferenceMatch(p, job)
+	// A reviewed public mapping may only contain skill requirements. Missing
+	// experience/education requirements are unknown, not evidence of a match.
+	if job.Source.Kind == "derived" {
+		if job.MinExperience == 0 {
+			experience = 0
+		}
+		if strings.TrimSpace(job.Education) == "" {
+			education = 0
+		}
+	}
 	if len(reqs) == 0 {
 		skillRatio = 0
 		transferRatio = 0
@@ -126,6 +142,14 @@ func scoreProfile(p Profile, job Job, w Weights) (float64, []Factor, []Gap, []st
 		{Name: "산업경험", Score: round(domain * w.Domain), Max: round(w.Domain), Reason: fmt.Sprintf("입력 산업 ‘%s’과 직무 산업 ‘%s’의 일치도 %.0f%%. 미입력은 0점입니다.", display(p.Domain), display(job.Domain), domain*100)},
 		{Name: "교육·자격", Score: round(education * w.Education), Max: round(w.Education), Reason: fmt.Sprintf("입력 학력 ‘%s’ / 참고 학력 ‘%s’. 자격증은 프로필에 보관하며 직무별 검증 매핑 전에는 점수를 추가하지 않습니다.", display(p.Education), display(job.Education))},
 		{Name: "개인 선호", Score: round(preference * w.Preference), Max: round(w.Preference), Reason: fmt.Sprintf("명시한 선호 직무·분류와 희망지역의 일치도 %.0f%%. 지역만 입력하면 이 요소의 최대 50%%입니다.", preference*100)},
+	}
+	if job.Source.Kind == "derived" {
+		if job.MinExperience == 0 {
+			factors[2].Reason = "검토된 매핑에 요구 경력 기준이 없어 이 요소는 0점입니다. 원천 데이터에서 요구 경력을 추정하지 않습니다."
+		}
+		if strings.TrimSpace(job.Education) == "" {
+			factors[4].Reason = "검토된 매핑에 학력·자격 기준이 없어 이 요소는 0점입니다."
+		}
 	}
 	score := 0.0
 	for _, f := range factors {
@@ -279,8 +303,11 @@ func SimulateWithCatalog(profile Profile, job Job, months int, addedSkills []Ski
 	if float64(months)*weekly*4.345 < hours {
 		sim.Warnings = append(sim.Warnings, fmt.Sprintf("선택한 %d개월 동안의 학습 가능 시간(약 %.0f시간)이 참고 학습량(약 %.0f시간)보다 적습니다.", months, float64(months)*weekly*4.345, hours))
 	}
-	if job.Source.Synthetic {
+	if job.Source.Synthetic || job.Source.Kind == "synthetic" {
 		sim.Warnings = append(sim.Warnings, "내장 직무 요건은 합성 예시이며 고용24·NCS 실측 데이터가 아닙니다. 관리자가 연동하면 출처가 있는 직무로 계산할 수 있습니다.")
+	}
+	if job.Source.Kind == "derived" {
+		sim.Warnings = append(sim.Warnings, "요구 수준(0~5)과 가중치는 관리자가 검토·게시한 내부 역량 매핑입니다. 원천 API 또는 NCS 공식 수준이 아니며 출처·매핑 버전을 함께 확인하세요.")
 	}
 	sim.Warnings = append(sim.Warnings, "적합도와 난이도는 설명 가능한 규칙 점수이며 취업 확률이 아닙니다. 기간·비용은 수준별 참고 학습시간과 20시간당 5만 원의 가정으로 계산한 합성 추정치입니다.")
 	sim.Explanation = fmt.Sprintf("%s의 확인된 역량을 %s의 요구 수준과 비교했습니다. 적합도 %.1f점, 역량 부족 항목 %d개이며, 주 %.0f시간 기준 참고 학습기간은 %d개월입니다. 기간을 바꿔도 학습을 완료했다고 가정하지 않으므로 점수는 자동 상승하지 않습니다.", display(profile.CurrentRole), job.Title, score, len(sim.ROI), weekly, sim.EstimatedMonths)

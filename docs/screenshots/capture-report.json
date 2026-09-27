@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "capturedAt": "2026-09-27T00:17:13.187Z",
+  "version": "1.1.0",
+  "capturedAt": "2026-09-27T01:44:53.591Z",
   "desktopViewport": {
     "width": 1440,
     "height": 1050
@@ -91,15 +91,25 @@
       "route": "/admin/connectors"
     },
     {
+      "name": "admin-data",
+      "route": "/admin/data"
+    },
+    {
+      "name": "admin-mappings",
+      "route": "/admin/mappings"
+    },
+    {
+      "name": "admin-data-policy",
+      "route": "/admin/data-policy"
+    },
+    {
+      "name": "privacy",
+      "route": "/privacy"
+    },
+    {
       "name": "admin-audit",
       "route": "/admin/audit"
     }
   ],
-  "errors": [],
-  "comparisonUpdatedAt": "2026-09-27T00:24:35.061Z",
-  "comparisonJobs": [
-    "ai-platform",
-    "data-engineer",
-    "devops"
-  ]
+  "errors": []
 }

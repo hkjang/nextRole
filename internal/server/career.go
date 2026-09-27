@@ -20,6 +20,7 @@ func (a *App) loadProfile(r *http.Request) (career.Profile, error) {
 	if e == pgx.ErrNoRows {
 		e = nil
 	}
+	p.Source = career.Source{Kind: "user_input", Provider: "서비스 이용자 본인", Name: "사용자 입력", Dataset: "career_profile"}
 	return p, e
 }
 func (a *App) profileGet(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +45,7 @@ func (a *App) profilePut(w http.ResponseWriter, r *http.Request) {
 	if !readJSON(w, r, &p) {
 		return
 	}
+	p = analysisProfile(p)
 	for i := range p.Skills {
 		p.Skills[i].Name = career.NormalizeSkill(p.Skills[i].Name)
 		if p.Skills[i].Confidence == "" {
@@ -69,7 +71,7 @@ func (a *App) profileParse(w http.ResponseWriter, r *http.Request) {
 		fail(w, 400, "분석할 경력을 100KB 이내로 입력하세요")
 		return
 	}
-	respond(w, 200, career.Parse(in.Text))
+	respond(w, 200, analysisProfile(career.Parse(redactIdentifiers(in.Text))))
 }
 func (a *App) profileUpload(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 11<<20)
@@ -96,10 +98,17 @@ func (a *App) profileUpload(w http.ResponseWriter, r *http.Request) {
 		fail(w, 400, e.Error())
 		return
 	}
-	respond(w, 200, career.Parse(text))
+	respond(w, 200, analysisProfile(career.Parse(redactIdentifiers(text))))
 }
 func (a *App) jobs(ctx context.Context) ([]career.Job, error) {
-	out := career.SeedJobs()
+	settings, err := a.settings(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := []career.Job{}
+	if settings.General.DemoEnabled {
+		out = career.SeedJobs()
+	}
 	records, e := a.records(ctx, "occupations", "")
 	if e != nil {
 		return nil, e
@@ -113,6 +122,15 @@ func (a *App) jobs(ctx context.Context) ([]career.Job, error) {
 		if json.Unmarshal(b, &j) != nil {
 			continue
 		}
+		j.Source = normalizeSource(j.Source)
+		if !settings.General.DemoEnabled && (j.Source.Synthetic || j.Source.Kind == "synthetic") {
+			continue
+		}
+		// Public records carry factual descriptions, not simulator mastery levels.
+		// Only administrator-reviewed mapping records become derived job models.
+		if j.Source.Kind == "public_api" || j.Source.Kind == "derived" {
+			continue
+		}
 		if idx, ok := byID[j.ID]; ok {
 			out[idx] = j
 		} else {
@@ -120,6 +138,11 @@ func (a *App) jobs(ctx context.Context) ([]career.Job, error) {
 			out = append(out, j)
 		}
 	}
+	derived, e := a.derivedJobs(ctx)
+	if e != nil {
+		return nil, e
+	}
+	out = append(out, derived...)
 	return out, nil
 }
 func (a *App) job(r *http.Request, jobID string) (career.Job, bool) {
@@ -214,10 +237,15 @@ type simulationInput struct {
 }
 
 func (a *App) calculate(r *http.Request, in simulationInput) (career.Simulation, error) {
+	if err := a.checkConsent(r.Context(), who(r).User.ID); err != nil {
+		return career.Simulation{}, err
+	}
+	in = cleanScenario(in)
 	p, e := a.loadProfile(r)
 	if e != nil {
 		return career.Simulation{}, e
 	}
+	p = analysisProfile(p)
 	j, found := a.job(r, in.JobID)
 	if !found {
 		return career.Simulation{}, errInvalid
@@ -268,6 +296,7 @@ func (a *App) simulate(w http.ResponseWriter, r *http.Request) {
 	if !readJSON(w, r, &in) {
 		return
 	}
+	in = cleanScenario(in)
 	sim, e := a.calculate(r, in)
 	if e != nil {
 		fail(w, 400, "목표 직무·기간(3/6/12개월)·추가 역량을 확인하세요")
@@ -322,13 +351,16 @@ func (a *App) opportunities(r *http.Request, jobID string) (map[string]any, erro
 			if json.Unmarshal(b, &o) != nil {
 				continue
 			}
-			match := strings.Contains(strings.ToLower(o.Title), strings.ToLower(j.Title))
-			for _, skill := range j.Skills {
-				for _, has := range o.Skills {
-					if career.NormalizeSkill(has) == career.NormalizeSkill(skill.Name) {
-						match = true
-					}
-				}
+			o.Source = normalizeSource(o.Source)
+			if !o.Source.Synthetic && o.Source.Kind != "synthetic" {
+				o.Skills = factualOpportunitySkills(o)
+			}
+			if !s.General.DemoEnabled && (o.Source.Synthetic || o.Source.Kind == "synthetic") {
+				continue
+			}
+			match := marketMatches(o, &j)
+			if kind == "training" {
+				match = trainingMatches(o, j)
 			}
 			if !match {
 				continue
@@ -336,9 +368,11 @@ func (a *App) opportunities(r *http.Request, jobID string) (map[string]any, erro
 			if profile.Region != "" && o.Region != "" && !strings.Contains(o.Region, profile.Region) && !strings.Contains(o.Region, "전국") && !strings.Contains(o.Region, "원격") {
 				continue
 			}
-			if o.Deadline != "" {
-				t, err := time.Parse("2006-01-02", o.Deadline)
-				if err == nil && t.Before(time.Now().Add(-24*time.Hour)) {
+			if active, known := marketDeadline(o.Deadline, time.Now()); known && !active {
+				continue
+			}
+			if kind == "training" {
+				if active, known := marketDeadline(o.EndDate, time.Now()); known && !active {
 					continue
 				}
 			}
@@ -363,11 +397,11 @@ func (a *App) opportunities(r *http.Request, jobID string) (map[string]any, erro
 	}
 	counts := map[string]int{}
 	for _, o := range recruit {
-		if o.Source.Synthetic {
+		if o.Source.Synthetic || o.Source.Kind == "synthetic" {
 			continue
 		}
 		seen := map[string]bool{}
-		for _, skill := range o.Skills {
+		for _, skill := range factualOpportunitySkills(o) {
 			k := career.NormalizeSkill(skill)
 			if !seen[k] {
 				counts[k]++
@@ -447,4 +481,19 @@ func (a *App) marketGet(w http.ResponseWriter, r *http.Request) {
 	if a.good(w, e) {
 		respond(w, 200, result)
 	}
+}
+
+// Training is mapped by reviewed source codes, never by fabricated skills parsed
+// from a course title. A public course without an aligned code is not guessed.
+func trainingMatches(o career.Opportunity, j career.Job) bool {
+	if j.Source.Kind == "derived" {
+
+		if o.NCSCode != "" && contains(j.NCSCodes, o.NCSCode) {
+			return true
+		}
+	}
+	if o.Source.Kind == "public_api" {
+		return false
+	}
+	return marketMatches(o, &j)
 }

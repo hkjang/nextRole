@@ -190,6 +190,9 @@ func Normalize(records []map[string]any, c Config) ([]map[string]any, error) {
 	if len(records) > MaxRecords {
 		return nil, errors.New("한 번에 5,000개 레코드까지만 가져올 수 있습니다")
 	}
+	if preset := Work24PresetID(c); preset != "" {
+		return normalizeWork24(records, c, preset)
+	}
 	keys := make([]string, 0, len(c.Mapping))
 	for key := range c.Mapping {
 		keys = append(keys, key)

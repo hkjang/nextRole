@@ -12,6 +12,7 @@ type Skill struct {
 }
 
 type Profile struct {
+	Source            Source   `json:"source"`
 	CareerBreakMonths int      `json:"careerBreakMonths"`
 	Name              string   `json:"name"`
 	CurrentRole       string   `json:"currentRole"`
@@ -26,10 +27,20 @@ type Profile struct {
 	WeeklyHours       float64  `json:"weeklyHours"`
 }
 
+// Source identifies original data separately from user entries and derived models.
 type Source struct {
-	Name      string `json:"name"`
-	URL       string `json:"url"`
-	Synthetic bool   `json:"synthetic"`
+	Kind        string   `json:"kind,omitempty"`
+	Provider    string   `json:"provider,omitempty"`
+	Dataset     string   `json:"dataset,omitempty"`
+	RecordID    string   `json:"recordId,omitempty"`
+	RetrievedAt string   `json:"retrievedAt,omitempty"`
+	Fields      []string `json:"fields,omitempty"`
+	Version     string   `json:"version,omitempty"`
+	Basis       string   `json:"basis,omitempty"`
+	SourceIDs   []string `json:"sourceIds,omitempty"`
+	Name        string   `json:"name"`
+	URL         string   `json:"url"`
+	Synthetic   bool     `json:"synthetic"`
 }
 
 type Requirement struct {
@@ -40,19 +51,37 @@ type Requirement struct {
 
 type Requirements = []Requirement
 
+// SourceRecord preserves public fields; OfficialLevel must never be treated as
+// the internal simulator's 0–5 mastery scale without a reviewed mapping.
+type SourceRecord struct {
+	ID             string         `json:"id"`
+	Title          string         `json:"title"`
+	Description    string         `json:"description,omitempty"`
+	OccupationCode string         `json:"occupationCode,omitempty"`
+	NCSCode        string         `json:"ncsCode,omitempty"`
+	OfficialLevel  string         `json:"officialLevel,omitempty"`
+	Source         Source         `json:"source"`
+	Raw            map[string]any `json:"raw"`
+}
+
 type Job struct {
-	ID            string        `json:"id"`
-	Title         string        `json:"title"`
-	Category      string        `json:"category"`
-	Description   string        `json:"description"`
-	Skills        []Requirement `json:"skills"`
-	MinExperience float64       `json:"minExperience"`
-	Domain        string        `json:"domain"`
-	Education     string        `json:"education"`
-	Regions       []string      `json:"regions"`
-	Source        Source        `json:"source"`
-	SalaryRange   string        `json:"salaryRange"`
-	BridgeIDs     []string      `json:"bridgeIds"`
+	RecruitmentCodes []string          `json:"recruitmentCodes,omitempty"`
+	OccupationCode   string            `json:"occupationCode,omitempty"`
+	NCSCodes         []string          `json:"ncsCodes,omitempty"`
+	SourceCode       string            `json:"sourceCode,omitempty"`
+	SkillAliases     map[string]string `json:"skillAliases,omitempty"`
+	ID               string            `json:"id"`
+	Title            string            `json:"title"`
+	Category         string            `json:"category"`
+	Description      string            `json:"description"`
+	Skills           []Requirement     `json:"skills"`
+	MinExperience    float64           `json:"minExperience"`
+	Domain           string            `json:"domain"`
+	Education        string            `json:"education"`
+	Regions          []string          `json:"regions"`
+	Source           Source            `json:"source"`
+	SalaryRange      string            `json:"salaryRange"`
+	BridgeIDs        []string          `json:"bridgeIds"`
 }
 
 type Gap struct {
@@ -130,15 +159,25 @@ type Weights struct {
 var DefaultWeights = Weights{40, 20, 15, 10, 5, 10}
 
 type Opportunity struct {
-	ID           string   `json:"id"`
-	Title        string   `json:"title"`
-	Organization string   `json:"organization"`
-	Region       string   `json:"region"`
-	URL          string   `json:"url"`
-	Skills       []string `json:"skills"`
-	Source       Source   `json:"source"`
-	Description  string   `json:"description"`
-	Cost         float64  `json:"cost,omitempty"`
-	Salary       string   `json:"salary,omitempty"`
-	Deadline     string   `json:"deadline,omitempty"`
+	PublicData       map[string]any `json:"raw,omitempty"`
+	Code             string         `json:"code,omitempty"`
+	OccupationCode   string         `json:"occupationCode,omitempty"`
+	NCSCode          string         `json:"ncsCode,omitempty"`
+	CourseID         string         `json:"courseId,omitempty"`
+	CourseRound      string         `json:"courseRound,omitempty"`
+	StartDate        string         `json:"startDate,omitempty"`
+	EndDate          string         `json:"endDate,omitempty"`
+	TuitionReference string         `json:"tuitionReference,omitempty"`
+	SkillsOrigin     string         `json:"skillsOrigin,omitempty"`
+	ID               string         `json:"id"`
+	Title            string         `json:"title"`
+	Organization     string         `json:"organization"`
+	Region           string         `json:"region"`
+	URL              string         `json:"url"`
+	Skills           []string       `json:"skills"`
+	Source           Source         `json:"source"`
+	Description      string         `json:"description"`
+	Cost             float64        `json:"cost,omitempty"`
+	Salary           string         `json:"salary,omitempty"`
+	Deadline         string         `json:"deadline,omitempty"`
 }

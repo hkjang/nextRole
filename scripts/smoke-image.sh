@@ -74,6 +74,8 @@ public = request('/api/v1/public')
 assert public['version'] == health['version']
 request('/api/v1/auth/login', {'email':os.environ['BOOTSTRAP_ADMIN'],'password':os.environ['BOOTSTRAP_ADMIN_PASSWORD']})
 assert request('/api/v1/me')['role'] == 'admin'
+policy = request('/api/v1/privacy')
+request('/api/v1/privacy/consent', {'version':policy['version'],'accepted':True})
 profile = request('/api/v1/profile/parse', {'text':'Java와 Spring 백엔드 개발 10년, Docker와 Linux 서버 운영 경험'})
 assert profile.get('skills'), 'offline career parser returned no skills'
 request('/api/v1/profile', profile, 'PUT')

@@ -107,7 +107,7 @@ func (a *App) marketSummary(r *http.Request, job *career.Job) (MarketSummary, er
 		return MarketSummary{}, err
 	}
 	var prior marketSnapshot
-	if json.Unmarshal(data, &prior) != nil || prior.Version != 1 {
+	if json.Unmarshal(data, &prior) != nil || prior.Version != 2 {
 		summary.Warnings = append(summary.Warnings, "비교할 수 있는 이전 스냅샷이 없습니다.")
 		return summary, nil
 	}
@@ -128,7 +128,7 @@ func (a *App) captureMarketSnapshot(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	snapshot := marketSnapshot{Version: 1, Date: now.In(marketLocation).Format("2006-01-02"), CapturedAt: now.UTC(), Overall: marketCounts(summarizeMarket(records, nil, now), ""), ByJob: map[string]marketAggregate{}}
+	snapshot := marketSnapshot{Version: 2, Date: now.In(marketLocation).Format("2006-01-02"), CapturedAt: now.UTC(), Overall: marketCounts(summarizeMarket(records, nil, now), ""), ByJob: map[string]marketAggregate{}}
 	for i := range jobs {
 		job := &jobs[i]
 		snapshot.ByJob[job.ID] = marketCounts(summarizeMarket(records, job, now), marketCriteria(job))
@@ -149,7 +149,7 @@ func marketCriteria(job *career.Job) string {
 		names = append(names, strings.ToLower(career.NormalizeSkill(sk.Name)))
 	}
 	sort.Strings(names)
-	return digest(strings.ToLower(strings.TrimSpace(job.Title)) + "\x00" + strings.Join(names, "\x00"))
+	return digest("factual-skills-v2\x00" + strings.ToLower(strings.TrimSpace(job.Title)) + "\x00" + job.OccupationCode + "\x00" + strings.Join(job.RecruitmentCodes, "\x00") + "\x00" + strings.Join(job.NCSCodes, "\x00") + "\x00" + strings.Join(names, "\x00"))
 }
 
 func summarizeMarket(records []marketRecord, job *career.Job, now time.Time) MarketSummary {
@@ -160,7 +160,7 @@ func summarizeMarket(records []marketRecord, job *career.Job, now time.Time) Mar
 	var updated time.Time
 	for _, record := range records {
 		o := record.Opportunity
-		if o.Source.Synthetic || !marketMatches(o, job) {
+		if o.Source.Synthetic || o.Source.Kind == "synthetic" || !marketMatches(o, job) {
 			continue
 		}
 		active, known := marketDeadline(o.Deadline, now)
@@ -188,7 +188,7 @@ func summarizeMarket(records []marketRecord, job *career.Job, now time.Time) Mar
 		for region := range uniqueMarketRegions(o.Region) {
 			regions[region]++
 		}
-		for skill := range uniqueMarketSkills(o.Skills) {
+		for skill := range uniqueMarketSkills(factualOpportunitySkills(o)) {
 			skills[skill]++
 		}
 		if len(result.SalarySamples) < 20 && strings.TrimSpace(o.Salary) != "" {
@@ -222,10 +222,19 @@ func marketMatches(o career.Opportunity, job *career.Job) bool {
 	if job == nil {
 		return true
 	}
+	if o.OccupationCode != "" && contains(job.RecruitmentCodes, o.OccupationCode) {
+		return true
+	}
+	if job.Source.Kind != "derived" && job.OccupationCode != "" && o.OccupationCode == job.OccupationCode {
+		return true
+	}
+	if o.NCSCode != "" && contains(job.NCSCodes, o.NCSCode) {
+		return true
+	}
 	if strings.EqualFold(strings.TrimSpace(o.Title), strings.TrimSpace(job.Title)) {
 		return true
 	}
-	postingSkills := uniqueMarketSkills(o.Skills)
+	postingSkills := uniqueMarketSkills(factualOpportunitySkills(o))
 	required := map[string]bool{}
 	for _, skill := range job.Skills {
 		required[strings.ToLower(career.NormalizeSkill(skill.Name))] = true
@@ -325,4 +334,19 @@ func applyMarketBaseline(summary *MarketSummary, snapshot marketSnapshot, job *c
 		return summary.Trends[i].Change > summary.Trends[j].Change
 	})
 	summary.Warnings = append(summary.Warnings, "추세는 이전 수집일 대비 공고 수 차이입니다. 수집 범위 변경·공고 만료의 영향이 포함되며 시장 전체 성장률이 아닙니다.")
+}
+
+// Pre-v2 imports inferred skills from prose. An absent origin is therefore not
+// evidence: preserving old rows must not convert historical guesses into facts.
+func factualOpportunitySkills(o career.Opportunity) []string {
+	if o.Source.Synthetic || o.Source.Kind == "synthetic" {
+		return nil
+	}
+	if strings.HasPrefix(o.Source.Dataset, "work24-") {
+		return nil
+	}
+	if o.SkillsOrigin != "source_field" && o.SkillsOrigin != "admin_reviewed" {
+		return nil
+	}
+	return o.Skills
 }

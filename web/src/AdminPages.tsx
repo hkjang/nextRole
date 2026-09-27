@@ -36,6 +36,13 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import { api } from "./api";
+import { datasetOptions } from "./AdminDataPages";
+import {
+  ConnectorPreview,
+  PresetCards,
+  PresetConfig,
+  PresetResponse,
+} from "./Work24Presets";
 import {
   Empty,
   Loading,
@@ -1138,6 +1145,7 @@ const initialConnector = {
 };
 export function ConnectorsPage() {
   const resource = useResource<any[]>("/admin/connectors"),
+    presets = useResource<PresetResponse>("/admin/connector-presets"),
     { notify } = useApp(),
     [editing, setEditing] = useState<any>(null),
     [mapping, setMapping] = useState(""),
@@ -1148,6 +1156,13 @@ export function ConnectorsPage() {
     [importOpen, setImportOpen] = useState(false),
     [importData, setImportData] = useState(""),
     [dataset, setDataset] = useState("jobs");
+  const selectedPreset = presets.data?.metadata.find(
+    (p) => p.id === editing?.presetId,
+  );
+  function applyPreset(id: string) {
+    const preset = presets.data?.presets.find((p) => p.presetId === id);
+    if (preset) edit({ ...initialConnector, ...preset, enabled: true });
+  }
   function edit(c: any) {
     setEditing({ ...c, apiKey: "", dsn: "" });
     setMapping(JSON.stringify(c.mapping || {}, null, 2));
@@ -1262,6 +1277,18 @@ export function ConnectorsPage() {
         설정하세요. 연결 테스트로 데이터를 확인한 뒤 동기화하면 서비스에
         반영됩니다.
       </Alert>
+      <Loading loading={presets.loading} error={presets.error} />
+      <PresetCards
+        metadata={presets.data?.metadata || []}
+        onSelect={applyPreset}
+      />
+      <Alert color="gray" mb="lg">
+        직업정보·NCS 원천은 동기화 후{" "}
+        <Link to="/admin/data">원천·가공 데이터</Link>에서 확인하세요.
+        시뮬레이션에 사용할 수준·가중치는{" "}
+        <Link to="/admin/mappings">역량 매핑 검토</Link>에서 근거를 작성하고
+        게시해야 합니다.
+      </Alert>
       <Loading loading={resource.loading} error={resource.error} />
       {resource.data?.length === 0 && (
         <Empty
@@ -1287,6 +1314,8 @@ export function ConnectorsPage() {
                           jobs: "채용 공고",
                           training: "교육 · 훈련",
                           occupations: "직무 정보",
+                          occupation_details: "직업정보 상세 원천",
+                          ncs_units: "NCS 능력단위 원천",
                         } as any
                       )[c.dataset]
                     }
@@ -1301,6 +1330,11 @@ export function ConnectorsPage() {
               {c.endpoint ||
                 (c.hasDsn ? "암호화된 데이터베이스 연결" : "DB 연결 설정")}
             </p>
+            {c.presetId && (
+              <p className="helper">
+                공식 프리셋 · 선택 저장 항목 {(c.selectedFields || []).length}개
+              </p>
+            )}
             {c.lastError && (
               <Alert color="red" mb="md">
                 {c.lastError}
@@ -1368,6 +1402,7 @@ export function ConnectorsPage() {
               />
               <Select
                 label="데이터 형식"
+                disabled={!!selectedPreset}
                 value={editing.type}
                 data={[
                   { value: "json", label: "JSON API" },
@@ -1380,12 +1415,9 @@ export function ConnectorsPage() {
               />
               <Select
                 label="데이터 용도"
+                disabled={!!selectedPreset}
                 value={editing.dataset}
-                data={[
-                  { value: "jobs", label: "채용 공고" },
-                  { value: "training", label: "교육 · 훈련" },
-                  { value: "occupations", label: "직무 정보" },
-                ]}
+                data={datasetOptions}
                 onChange={(v) => setEditing({ ...editing, dataset: v })}
               />
               <Switch
@@ -1428,6 +1460,11 @@ export function ConnectorsPage() {
                 <TextInput
                   required
                   label="Endpoint URL"
+                  description={
+                    selectedPreset
+                      ? "공식 주소가 기본입니다. 운영망의 승인된 API 프록시 주소로 변경할 수 있습니다."
+                      : undefined
+                  }
                   placeholder="https://api.example.com/jobs"
                   value={editing.endpoint || ""}
                   onChange={(e) =>
@@ -1437,12 +1474,14 @@ export function ConnectorsPage() {
                 <div className="form-grid">
                   <Select
                     label="HTTP 메서드"
+                    disabled={!!selectedPreset}
                     value={editing.method || "GET"}
                     data={["GET", "POST"]}
                     onChange={(v) => setEditing({ ...editing, method: v })}
                   />
                   <TextInput
                     label="결과 목록 경로"
+                    readOnly={!!selectedPreset}
                     placeholder="예: data.items 또는 wantedRoot.wanted"
                     value={editing.rootPath || ""}
                     onChange={(e) =>
@@ -1459,6 +1498,7 @@ export function ConnectorsPage() {
                   />
                   <TextInput
                     label="인증 헤더 이름"
+                    readOnly={!!selectedPreset}
                     placeholder="Authorization"
                     value={editing.authHeader || ""}
                     onChange={(e) =>
@@ -1467,6 +1507,7 @@ export function ConnectorsPage() {
                   />
                   <TextInput
                     label="인증키 쿼리 매개변수"
+                    readOnly={!!selectedPreset}
                     placeholder="예: authKey (헤더 대신 쿼리로 전달)"
                     value={editing.apiKeyParam || ""}
                     onChange={(e) =>
@@ -1474,8 +1515,24 @@ export function ConnectorsPage() {
                     }
                   />
                 </div>
+                {selectedPreset && (
+                  <PresetConfig
+                    metadata={selectedPreset}
+                    params={params}
+                    selectedFields={editing.selectedFields}
+                    onParams={setParams}
+                    onFields={(selectedFields) =>
+                      setEditing({ ...editing, selectedFields })
+                    }
+                  />
+                )}
                 <Textarea
                   label="요청 매개변수 (JSON 객체)"
+                  description={
+                    selectedPreset
+                      ? "고급 조회 조건입니다. 인증키는 위의 비밀 입력란에만 입력하세요. 공식 명세에 있는 매개변수를 사용하세요."
+                      : undefined
+                  }
                   placeholder={'{"returnType":"XML","display":"100"}'}
                   minRows={3}
                   value={params}
@@ -1494,19 +1551,23 @@ export function ConnectorsPage() {
                 )}
               </>
             )}
-            <Textarea
-              label="필드 매핑 (JSON 객체)"
-              description="NextRole 필드: 원본 데이터 필드 경로. 예: title: wantedTitle, organization: company"
-              minRows={7}
-              value={mapping}
-              onChange={(e) => setMapping(e.target.value)}
-              styles={{ input: { fontFamily: "monospace" } }}
-            />
-            <Alert color="gray">
-              채용·훈련: id, title, organization, region, url, description,
-              skills. 직무: id, title, category, description, skills, domain.
-              출처는 동기화 시 유지됩니다.
-            </Alert>
+            {!selectedPreset && (
+              <>
+                <Textarea
+                  label="필드 매핑 (JSON 객체)"
+                  description="NextRole 필드: 원본 데이터 필드 경로. 예: title: wantedTitle, organization: company"
+                  minRows={7}
+                  value={mapping}
+                  onChange={(e) => setMapping(e.target.value)}
+                  styles={{ input: { fontFamily: "monospace" } }}
+                />
+                <Alert color="gray">
+                  채용·훈련: id, title, organization, region, url, description,
+                  skills. 직무: id, title, category, description, skills,
+                  domain. 출처는 동기화 시 유지됩니다.
+                </Alert>
+              </>
+            )}
             <Button type="submit" loading={busy === "save"}>
               연결 저장
             </Button>
@@ -1532,9 +1593,7 @@ export function ConnectorsPage() {
         centered
       >
         <Badge color="teal">{preview?.count || 0}개 항목 확인</Badge>
-        <pre className="code-block">
-          {JSON.stringify(preview?.preview, null, 2)}
-        </pre>
+        <ConnectorPreview preview={preview?.preview} />
       </Modal>
       <Modal
         opened={importOpen}
@@ -1548,11 +1607,7 @@ export function ConnectorsPage() {
             label="데이터 용도"
             value={dataset}
             onChange={(v) => setDataset(v || "jobs")}
-            data={[
-              { value: "jobs", label: "채용 공고" },
-              { value: "training", label: "교육 · 훈련" },
-              { value: "occupations", label: "직무 정보" },
-            ]}
+            data={datasetOptions}
           />
           <Textarea
             label="레코드 JSON 배열"

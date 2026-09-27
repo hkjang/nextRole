@@ -47,6 +47,10 @@ func readJSON(w http.ResponseWriter, r *http.Request, v any) bool {
 func ok(w http.ResponseWriter) { respond(w, 200, map[string]bool{"ok": true}) }
 func (a *App) good(w http.ResponseWriter, err error) bool {
 	if err != nil {
+		if errors.Is(err, errConsent) {
+			fail(w, 403, errConsent.Error())
+			return false
+		}
 		log.Printf("database operation failed: %T", err)
 		fail(w, 500, "저장 또는 조회에 실패했습니다. 잠시 후 다시 시도하세요")
 		return false
@@ -83,6 +87,9 @@ func (a *App) Handler() http.Handler {
 	admin := func(pattern string, fn http.HandlerFunc) { m.Handle(pattern, a.auth("", true, fn)) }
 	route("GET "+p+"/me", "", a.me)
 	route("PUT "+p+"/me", "", a.updateMe)
+	route("GET "+p+"/privacy", "profile:read", a.privacyGet)
+	route("POST "+p+"/privacy/consent", "profile:write", a.consentAccept)
+	route("DELETE "+p+"/privacy/consent", "profile:write", a.consentWithdraw)
 	route("POST "+p+"/me/password", "", a.password)
 	route("GET "+p+"/profile", "profile:read", a.profileGet)
 	route("PUT "+p+"/profile", "profile:write", a.profilePut)
@@ -118,6 +125,18 @@ func (a *App) Handler() http.Handler {
 	admin("PUT "+p+"/admin/providers/{id}", a.providersSave)
 	admin("DELETE "+p+"/admin/providers/{id}", a.providersDelete)
 	admin("GET "+p+"/admin/connectors", a.connectorsList)
+	admin("GET "+p+"/admin/connector-presets", a.connectorPresets)
+	admin("GET "+p+"/admin/data-policy", a.dataPolicyGet)
+	admin("PUT "+p+"/admin/data-policy", a.dataPolicyPut)
+	admin("GET "+p+"/admin/data", a.dataOverview)
+	admin("GET "+p+"/admin/source-records", a.sourceRecords)
+	admin("DELETE "+p+"/admin/source-records/{dataset}/{id}", a.sourceRecordDelete)
+	admin("GET "+p+"/admin/mappings", a.mappingsList)
+	admin("POST "+p+"/admin/mappings", a.mappingsSave)
+	admin("PUT "+p+"/admin/mappings/{id}", a.mappingsSave)
+	admin("DELETE "+p+"/admin/mappings/{id}", a.mappingsDelete)
+	admin("GET "+p+"/admin/mappings/{id}/history", a.mappingHistory)
+	admin("POST "+p+"/admin/mappings/{id}/publish", a.mappingPublish)
 	admin("POST "+p+"/admin/connectors", a.connectorsSave)
 	admin("PUT "+p+"/admin/connectors/{id}", a.connectorsSave)
 	admin("DELETE "+p+"/admin/connectors/{id}", a.connectorsDelete)
@@ -251,7 +270,11 @@ func (a *App) auth(scope string, admin bool, next http.HandlerFunc) http.Handler
 			return
 		}
 		ident.User = u
-		next(w, r.WithContext(context.WithValue(r.Context(), authKey{}, ident)))
+		r = r.WithContext(context.WithValue(r.Context(), authKey{}, ident))
+		if careerConsentRoute(r) && !a.good(w, a.checkConsent(r.Context(), uid)) {
+			return
+		}
+		next(w, r)
 	})
 }
 func (a *App) user(ctx context.Context, uid string) (User, error) {

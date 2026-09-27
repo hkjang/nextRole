@@ -242,6 +242,9 @@ func (a *App) putRecord(ctx context.Context, kind, owner, key string, v any) err
 	if err != nil {
 		return err
 	}
+	if contains([]string{"profile", "simulation", "roadmap", "feedback", "approval"}, kind) {
+		return a.putPrivateCareerRecord(ctx, kind, owner, key, b)
+	}
 	_, err = a.db.Exec(ctx, "INSERT INTO nr_records(kind,owner_id,id,data) VALUES($1,$2,$3,$4) ON CONFLICT(kind,owner_id,id) DO UPDATE SET data=excluded.data,updated_at=now()", kind, owner, key, b)
 	return err
 }

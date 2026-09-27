@@ -271,3 +271,15 @@ func TestCareerBreakAddsReentryTasksWithoutScorePenalty(t *testing.T) {
 		t.Fatal("missing actionable reentry support")
 	}
 }
+
+func TestDerivedMappingDoesNotAssumeMissingExperienceOrEducation(t *testing.T) {
+	job := Job{ID: "reviewed", Title: "검토된 직무", Source: Source{Kind: "derived"}, Skills: []Requirement{{Name: "SQL", Level: 3, Weight: 1}}, SkillAliases: map[string]string{"질의 언어": "SQL"}}
+	p := Profile{YearsExperience: 10, Education: "학사", Skills: []Skill{{Name: "질의 언어", Level: 3, Confidence: "explicit"}}}
+	sim := Simulate(p, job, 6, nil)
+	if sim.Factors[2].Score != 0 || sim.Factors[4].Score != 0 || sim.Gaps[0].Current != 3 {
+		t.Fatalf("reviewed model assumed unavailable requirements or lost aliases: %+v", sim)
+	}
+	if !strings.Contains(sim.Factors[2].Reason, "기준이 없어") || !strings.Contains(strings.Join(sim.Warnings, " "), "공식 수준이 아니며") {
+		t.Fatal("unknown requirements or internal scale were not explained")
+	}
+}

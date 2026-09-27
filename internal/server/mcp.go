@@ -79,6 +79,12 @@ func (a *App) mcp(w http.ResponseWriter, r *http.Request) {
 			rpcErr(-32003, "도구에 필요한 API 키 권한이 없습니다")
 			return
 		}
+		if p.Name == "career_simulate" || p.Name == "career_opportunities" {
+			if err := a.checkConsent(r.Context(), who(r).User.ID); err != nil {
+				rpcErr(-32003, "경력 정보 수집·분석 동의가 필요합니다. /privacy에서 현재 안내를 확인하세요")
+				return
+			}
+		}
 		var v any
 		var e error
 		switch p.Name {
@@ -165,6 +171,9 @@ func (a *App) openapi(w http.ResponseWriter, r *http.Request) {
 	for _, item := range []struct{ path, method, summary string }{{"/profile", "get", "내 경력 조회 (profile:read)"}, {"/jobs", "get", "직무 검색 (jobs:read)"}, {"/recommendations", "get", "경력 기반 직무 추천 (profile:read)"}, {"/simulations", "get", "저장한 시뮬레이션 조회 (profile:read)"}, {"/opportunities", "get", "채용 및 훈련 조회, jobId 필요 (jobs:read)"}, {"/roadmap", "get", "로드맵 진척 조회 (profile:read)"}, {"/market", "get", "실제 공고 표본의 지역·역량·급여·수집 추세 (jobs:read)"}} {
 		add(item.path, item.method, item.summary, nil)
 	}
+	add("/privacy", "get", "경력 정보 수집·분석 안내와 현재 동의 조회 (profile:read)", nil)
+	add("/privacy/consent", "post", "현재 안내 버전에 명시적 동의 (profile:write)", map[string]any{"type": "object", "required": []string{"version", "accepted"}, "properties": map[string]any{"version": map[string]string{"type": "string"}, "accepted": map[string]any{"type": "boolean", "const": true}}})
+	add("/privacy/consent", "delete", "동의 철회 및 본인 경력·시뮬레이션·실행계획·선호·검토 요청 삭제 (profile:write)", nil)
 	skill := map[string]any{"type": "object", "required": []string{"name", "level"}, "properties": map[string]any{"name": map[string]string{"type": "string"}, "level": map[string]any{"type": "number", "minimum": 0, "maximum": 5}, "years": map[string]any{"type": "number", "minimum": 0, "maximum": 80}, "confidence": map[string]any{"type": "string", "enum": []string{"explicit", "inferred", "review"}}}}
 	add("/simulate", "post", "What-if 시뮬레이션 (simulate:write)", map[string]any{"type": "object", "required": []string{"jobId"}, "properties": map[string]any{"jobId": map[string]string{"type": "string"}, "months": map[string]any{"type": "integer", "enum": []int{3, 6, 12}}, "save": map[string]string{"type": "boolean"}, "addedSkills": map[string]any{"type": "array", "items": skill}}})
 	add("/profile", "put", "내 경력 저장 (profile:write)", map[string]any{"type": "object", "properties": map[string]any{"name": map[string]string{"type": "string"}, "currentRole": map[string]string{"type": "string"}, "yearsExperience": map[string]string{"type": "number"}, "skills": map[string]any{"type": "array", "items": skill}, "narrative": map[string]string{"type": "string"}}})

@@ -2,7 +2,7 @@ package career
 
 // The included catalog is an authored demonstration model, not a copy of NCS
 // or Work24. Every built-in record retains synthetic=true when displayed/exported.
-var demoSource = Source{Name: "NextRole 오프라인 합성 직무 모델 v1", Synthetic: true}
+var demoSource = Source{Name: "NextRole 오프라인 합성 직무 모델 v1", Kind: "synthetic", Provider: "NextRole", Dataset: "demo_occupations", Version: "1", Synthetic: true}
 
 func req(name string, level, weight float64) Requirement { return Requirement{name, level, weight} }
 
@@ -46,7 +46,7 @@ func SeedJobs() []Job {
 // Empty URLs are intentional: no fabricated job advertisement or course link.
 func SeedOpportunities(job Job) (jobs []Opportunity, training []Opportunity) {
 	jobs, training = []Opportunity{}, []Opportunity{}
-	source := Source{Name: "NextRole 합성 예시 · 실제 공고·훈련과정 아님", Synthetic: true}
+	source := Source{Name: "NextRole 합성 예시 · 실제 공고·훈련과정 아님", Kind: "synthetic", Provider: "NextRole", Dataset: "demo_opportunities", Version: "1", Synthetic: true}
 	skills := []string{}
 	for _, r := range job.Skills {
 		skills = append(skills, r.Name)

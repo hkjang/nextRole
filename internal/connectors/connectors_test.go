@@ -202,7 +202,17 @@ func TestCancelledContext(t *testing.T) {
 }
 
 func TestWork24Presets(t *testing.T) {
-	for _, config := range Work24Presets(time.Date(2026, 9, 27, 0, 0, 0, 0, time.UTC)) {
+	presets := Work24Presets(time.Date(2026, 9, 27, 0, 0, 0, 0, time.UTC))
+	if len(presets) != 4 {
+		t.Fatal("four official presets are required")
+	}
+	for _, config := range presets {
+		if config.PresetID == Work24Occupation {
+			config.Params["jobCd"] = "133301"
+		}
+		if config.PresetID == Work24NCS {
+			config.Params["jobCont"] = "테스트 수행직무 내용"
+		}
 		if err := Validate(config); err != nil || config.Enabled || config.APIKey != "" {
 			t.Fatalf("invalid starter config: %v", err)
 		}

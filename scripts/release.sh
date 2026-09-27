@@ -38,7 +38,7 @@ NextRole v$nextrole_version — AI 경력전환 시뮬레이터
 
 오프라인 서버에서 \`docker load -i nextrole-v$nextrole_version.tar.gz\`로 이미지를 불러옵니다. 저장소의 compose.yaml과 .env.example을 함께 반입하고 네 환경변수를 설정한 후 \`docker compose up -d\`를 실행합니다.
 
-[설치·운영 가이드](https://github.com/hkjang/nextRole/blob/v$nextrole_version/README.md) · [데이터 연동](https://github.com/hkjang/nextRole/blob/v$nextrole_version/docs/integrations.md)
+[변경 기록](https://github.com/hkjang/nextRole/blob/v$nextrole_version/CHANGELOG.md) · [설치·운영 가이드](https://github.com/hkjang/nextRole/blob/v$nextrole_version/README.md) · [데이터 연동](https://github.com/hkjang/nextRole/blob/v$nextrole_version/docs/integrations.md)
 
 외부 SSO·AI·고용24 API는 해당 서비스에 접근할 수 있는 망에서만 동작합니다. 폐쇄망에서는 내부 OIDC, 로컬 AI, 반입 데이터를 설정합니다. 인증키가 필요한 외부 사업자와의 실계정 연동은 배포 기관의 설정 후 검증이 필요합니다.
 

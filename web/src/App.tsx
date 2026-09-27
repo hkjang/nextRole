@@ -66,6 +66,8 @@ import {
   ConnectorsPage,
   AuditPage,
 } from "./AdminPages";
+import { PrivacyPage, DataPolicyPage, CareerConsentGate } from "./PrivacyPages";
+import { DataSourcesPage, MappingsPage } from "./AdminDataPages";
 export const AppContext = createContext<any>(null);
 export function useApp() {
   return useContext(AppContext);
@@ -160,27 +162,36 @@ export function Empty({
     </div>
   );
 }
+export const sourceKinds: Record<string, { label: string; color: string }> = {
+  public_api: { label: "공공 API 원천", color: "blue" },
+  user_input: { label: "사용자 입력", color: "grape" },
+  synthetic: { label: "합성 예시", color: "orange" },
+  derived: { label: "가공·추론", color: "violet" },
+  external: { label: "외부 데이터", color: "gray" },
+};
 export function SourceTag({ source }: { source?: any }) {
-  return source ? (
-    <span className="source-tag">
-      {source.synthetic ? (
-        <Badge color="orange" variant="light">
-          합성 예시
-        </Badge>
-      ) : (
-        <Badge color="teal" variant="light">
-          연동 데이터
-        </Badge>
-      )}
+  if (!source) return null;
+  const kind = source.synthetic ? "synthetic" : source.kind || "external";
+  const info = sourceKinds[kind] || sourceKinds.external;
+  return (
+    <div className="source-tag">
+      <Badge color={info.color} variant="light">
+        {info.label}
+      </Badge>
       {source.url ? (
         <a href={source.url} target="_blank" rel="noreferrer">
-          {source.name} ↗
+          {source.name || source.provider || "원문 출처"} ↗
         </a>
       ) : (
-        <span>{source.name}</span>
+        <span>{source.name || source.provider || "출처 확인 필요"}</span>
       )}
-    </span>
-  ) : null;
+      {kind === "derived" && (
+        <span className="source-derived-note">
+          공식 원문과 구분되는 내부 가공값
+        </span>
+      )}
+    </div>
+  );
 }
 export function Panel({
   children,
@@ -245,6 +256,9 @@ const adminNav = [
   ["/admin/scoring", "점수 모델", IconChartBar],
   ["/admin/providers", "SSO 로그인 연동", IconKey],
   ["/admin/connectors", "데이터 연동", IconDatabase],
+  ["/admin/data", "원천·가공 데이터", IconDatabase],
+  ["/admin/mappings", "역량 매핑 검토", IconFileCheck],
+  ["/admin/data-policy", "개인정보 안내", IconShieldLock],
   ["/admin/audit", "감사 로그", IconHistory],
 ] as const;
 function Auth() {
@@ -486,6 +500,10 @@ function Shell() {
                 <IconTerminal2 size={21} />
                 API · MCP
               </NavLink>
+              <NavLink to="/privacy" className="nav-item">
+                <IconShieldLock size={21} />
+                개인정보·동의
+              </NavLink>
               <NavLink to="/preferences" className="nav-item">
                 <IconSettings size={21} />
                 개인 설정
@@ -540,6 +558,7 @@ function Shell() {
                       "/keys": "개인 API 키",
                       "/api": "API · MCP",
                       "/preferences": "개인 설정",
+                      "/privacy": "개인정보·동의",
                       "/approvals": "검토 · 승인",
                     } as any
                   )[location.pathname] ||
@@ -607,17 +626,60 @@ function Shell() {
         </header>
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route
+              path="/"
+              element={
+                <CareerConsentGate>
+                  <Dashboard />
+                </CareerConsentGate>
+              }
+            />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/discover" element={<DiscoverPage />} />
-            <Route path="/compare" element={<ComparePage />} />
-            <Route path="/simulator" element={<SimulatorPage />} />
-            <Route path="/roadmap" element={<RoadmapPage />} />
-            <Route path="/opportunities" element={<OpportunitiesPage />} />
+            <Route
+              path="/discover"
+              element={
+                <CareerConsentGate>
+                  <DiscoverPage />
+                </CareerConsentGate>
+              }
+            />
+            <Route
+              path="/compare"
+              element={
+                <CareerConsentGate>
+                  <ComparePage />
+                </CareerConsentGate>
+              }
+            />
+            <Route
+              path="/simulator"
+              element={
+                <CareerConsentGate>
+                  <SimulatorPage />
+                </CareerConsentGate>
+              }
+            />
+            <Route
+              path="/roadmap"
+              element={
+                <CareerConsentGate>
+                  <RoadmapPage />
+                </CareerConsentGate>
+              }
+            />
+            <Route
+              path="/opportunities"
+              element={
+                <CareerConsentGate>
+                  <OpportunitiesPage />
+                </CareerConsentGate>
+              }
+            />
             <Route path="/saved" element={<SavedPage />} />
             <Route path="/keys" element={<KeysPage />} />
             <Route path="/api" element={<APIPage />} />
             <Route path="/preferences" element={<PreferencesPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
             <Route
               path="/approvals"
               element={
@@ -650,6 +712,9 @@ function Shell() {
                 />
                 <Route path="/admin/providers" element={<ProvidersPage />} />
                 <Route path="/admin/connectors" element={<ConnectorsPage />} />
+                <Route path="/admin/data" element={<DataSourcesPage />} />
+                <Route path="/admin/mappings" element={<MappingsPage />} />
+                <Route path="/admin/data-policy" element={<DataPolicyPage />} />
                 <Route path="/admin/audit" element={<AuditPage />} />
               </>
             )}

@@ -80,7 +80,20 @@ export async function streamAI(
   }
   return mode;
 }
-export type Source = { name: string; url: string; synthetic: boolean };
+export type Source = {
+  name: string;
+  url: string;
+  synthetic: boolean;
+  kind?: "public_api" | "user_input" | "synthetic" | "derived" | "external";
+  provider?: string;
+  dataset?: string;
+  recordId?: string;
+  retrievedAt?: string;
+  fields?: string[];
+  version?: number | string;
+  basis?: string;
+  sourceIds?: string[];
+};
 export type Skill = {
   name: string;
   level: number;

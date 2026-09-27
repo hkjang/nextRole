@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 const email = process.env.NEXTROLE_TEST_ADMIN || 'admin@nextrole.local';
 const password = process.env.NEXTROLE_TEST_PASSWORD;
+async function consent(page: import('@playwright/test').Page) {
+  const policy = await (await page.request.get('/api/v1/privacy')).json();
+  expect((await page.request.post('/api/v1/privacy/consent', { data: { version: policy.version, accepted: true } })).ok()).toBeTruthy();
+}
 test.skip(!password, 'NEXTROLE_TEST_PASSWORD is required for browser integration checks');
 
 test('한국어 로그인, 프로필 저장, What-if, 저장, 새로고침과 전체 페이지', async ({ page }) => {
@@ -11,11 +15,12 @@ test('한국어 로그인, 프로필 저장, What-if, 저장, 새로고침과 �
     if (url.pathname.startsWith('/api/v1/') && response.status() >= 400 && !(url.pathname === '/api/v1/me' && response.status() === 401)) errors.push(`${response.status()} ${url.pathname}`);
   });
   await page.goto('/login');
-  await expect(page.getByText(/v1\.0\.0/).first()).toBeVisible();
+  await expect(page.getByText(/v1\.1\.0/).first()).toBeVisible();
   await page.getByLabel(/이메일/).fill(email);
   await page.getByPlaceholder('비밀번호를 입력하세요').fill(password!);
   await page.getByRole('button', { name: '로그인', exact: true }).click();
   await expect(page.locator('.sidebar')).toBeVisible();
+  await consent(page);
   await page.goto('/profile');
   await page.getByRole('button', { name: '예시 경력 채우기' }).click();
   await page.getByRole('button', { name: '경력 저장', exact: true }).click();
@@ -27,7 +32,7 @@ test('한국어 로그인, 프로필 저장, What-if, 저장, 새로고침과 �
   await expect.poll(() => page.locator('.score-change').innerText()).not.toBe(before);
   await page.getByRole('button', { name: '시뮬레이션 저장', exact: true }).click();
   await expect(page.getByText('시뮬레이션을 저장했습니다.')).toBeVisible();
-  for (const path of ['/discover','/compare','/roadmap','/opportunities','/saved','/keys','/api','/preferences','/admin','/admin/users','/admin/general','/admin/ai','/admin/security','/admin/scoring','/admin/providers','/admin/connectors','/admin/audit']) {
+  for (const path of ['/discover','/compare','/roadmap','/opportunities','/saved','/keys','/api','/preferences','/admin','/admin/users','/admin/general','/admin/ai','/admin/security','/admin/scoring','/admin/providers','/admin/connectors','/admin/data','/admin/mappings','/admin/data-policy','/privacy','/admin/audit']) {
     await page.goto(path);
     await expect(page.locator('main h1')).toBeVisible();
     await page.reload();
@@ -45,6 +50,7 @@ test('모바일 메뉴와 가로 넘침', async ({ page }) => {
   await page.getByPlaceholder('비밀번호를 입력하세요').fill(password!);
   await page.getByRole('button', { name: '로그인', exact: true }).click();
   await expect(page.getByRole('button', { name: '메뉴 열기' })).toBeVisible();
+  await consent(page);
   await page.getByRole('button', { name: '메뉴 열기' }).click();
   await expect(page.locator('.sidebar')).toBeVisible();
   await page.locator('.sidebar').getByRole('link', { name: /내 경력/ }).click();
@@ -86,6 +92,7 @@ test('개인 키 발급·회전·폐기와 실제 API 인증', async ({ page }) 
 
 test('오프라인 AI 스트리밍과 이력서 텍스트 업로드', async ({ page }) => {
   await page.request.post('/api/v1/auth/login', { data: { email, password } });
+  await consent(page);
   await page.goto('/profile');
   await page.locator('input[type=file]').setInputFiles({ name: 'career.txt', mimeType: 'text/plain', buffer: Buffer.from('Java 개발자로 10년 근무했고 Docker와 Kubernetes 운영 경험이 있습니다.', 'utf8') });
   await expect(page.getByLabel('나의 경력 이야기')).toHaveValue(/Java 개발자/);

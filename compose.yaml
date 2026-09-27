@@ -1,7 +1,7 @@
 name: nextrole
 services:
   nextrole:
-    image: nextrole:v1.0.0
+    image: nextrole:v1.1.0
     pull_policy: never
     restart: unless-stopped
     ports:

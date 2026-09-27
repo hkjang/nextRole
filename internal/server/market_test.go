@@ -10,7 +10,7 @@ import (
 )
 
 func marketFixture(id, title, region, deadline string, skills []string, synthetic bool) marketRecord {
-	return marketRecord{Opportunity: career.Opportunity{ID: id, Title: title, Region: region, Deadline: deadline, Skills: skills, URL: "https://jobs.example.test/" + id, Source: career.Source{Name: "검증 공고", URL: "https://jobs.example.test", Synthetic: synthetic}}, UpdatedAt: time.Date(2026, 9, 27, 0, 0, 0, 0, time.UTC)}
+	return marketRecord{Opportunity: career.Opportunity{ID: id, Title: title, Region: region, Deadline: deadline, Skills: skills, SkillsOrigin: "source_field", URL: "https://jobs.example.test/" + id, Source: career.Source{Name: "검증 공고", URL: "https://jobs.example.test", Synthetic: synthetic}}, UpdatedAt: time.Date(2026, 9, 27, 0, 0, 0, 0, time.UTC)}
 }
 
 func TestMarketCountsOnlyCurrentRealListings(t *testing.T) {
@@ -46,9 +46,9 @@ func TestMarketRelevanceUsesTwoDistinctSkillsOrExactTitle(t *testing.T) {
 		want    bool
 	}{
 		{career.Opportunity{Title: "플랫폼 엔지니어"}, true},
-		{career.Opportunity{Title: "운영 개발자", Skills: []string{"golang", "리눅스"}}, true},
-		{career.Opportunity{Title: "채용", Skills: []string{"Go", "golang"}}, false},
-		{career.Opportunity{Title: "AI 엔지니어", Skills: []string{"Python"}}, false},
+		{career.Opportunity{Title: "운영 개발자", SkillsOrigin: "source_field", Skills: []string{"golang", "리눅스"}}, true},
+		{career.Opportunity{Title: "채용", SkillsOrigin: "source_field", Skills: []string{"Go", "golang"}}, false},
+		{career.Opportunity{Title: "AI 엔지니어", SkillsOrigin: "source_field", Skills: []string{"Python"}}, false},
 	}
 	for _, tc := range cases {
 		if got := marketMatches(tc.posting, job); got != tc.want {
@@ -79,7 +79,7 @@ func TestMarketDeadlineKoreanDateBoundary(t *testing.T) {
 
 func TestMarketTrendsNeedComparableHistoricalCounts(t *testing.T) {
 	job := &career.Job{ID: "platform", Title: "플랫폼 엔지니어", Skills: []career.Requirement{{Name: "Go"}, {Name: "Linux"}}}
-	prior := marketSnapshot{Version: 1, Date: "2026-09-26", Overall: marketAggregate{SkillFrequency: []MarketCount{{Name: "Go", Count: 20}}}, ByJob: map[string]marketAggregate{
+	prior := marketSnapshot{Version: 2, Date: "2026-09-26", Overall: marketAggregate{SkillFrequency: []MarketCount{{Name: "Go", Count: 20}}}, ByJob: map[string]marketAggregate{
 		"platform": {CriteriaHash: marketCriteria(job), SkillFrequency: []MarketCount{{Name: "Go", Count: 1}, {Name: "Linux", Count: 3}}},
 	}}
 	summary := MarketSummary{SkillFrequency: []MarketCount{{Name: "Go", Count: 3}, {Name: "Python", Count: 1}}, Trends: []MarketTrend{}}

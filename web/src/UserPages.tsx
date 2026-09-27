@@ -44,6 +44,7 @@ import {
   IconUpload,
   IconWand,
 } from "@tabler/icons-react";
+import { PrivacyNotice, usePrivacy } from "./PrivacyPages";
 import MarketInsights from "./MarketInsights";
 import {
   api,
@@ -137,6 +138,7 @@ function JobCard({
           <p>{sim.rankingReason}</p>
         </details>
       )}
+      <SourceTag source={sim.source || sim.job.source} />
       <Link to={`/simulator?job=${sim.job.id}`} className="card-link">
         이 직무로 실험하기 <IconArrowUpRight size={19} />
       </Link>
@@ -433,8 +435,9 @@ function AIExplanation({
   );
 }
 export function ProfilePage() {
+  const privacy = usePrivacy();
   const { notify } = useApp(),
-    resource = useResource<Profile>("/profile"),
+    resource = useResource<Profile>(privacy.accepted ? "/profile" : null),
     [profile, setProfile] = useState<Profile>(emptyProfile),
     [busy, setBusy] = useState(""),
     [newSkill, setNewSkill] = useState("");
@@ -497,6 +500,19 @@ export function ProfilePage() {
       setBusy("");
     }
   }
+  if (!privacy.accepted)
+    return (
+      <>
+        <PageTitle
+          title="경력 서비스 이용 전, 내 정보부터 확인"
+          description="경력을 입력하거나 이력서를 분석하기 전에 수집·이용 안내를 확인해 주세요."
+        />
+        <PrivacyNotice
+          privacy={privacy}
+          onAccepted={() => void resource.reload()}
+        />
+      </>
+    );
   return (
     <>
       <PageTitle
@@ -513,6 +529,15 @@ export function ProfilePage() {
         }
       />
       <Loading loading={resource.loading} error={resource.error} />
+      <Alert
+        color="teal"
+        mb="lg"
+        title="개인정보를 제외하고 경력을 알려 주세요"
+      >
+        경력 분석에 필요하지 않은 주민등록번호, 연락처, 이메일, 상세 주소는
+        입력·업로드하지 마세요.{" "}
+        <Link to="/privacy">수집·이용 안내와 동의 관리</Link>
+      </Alert>
       <div className="profile-layout">
         <div>
           <Panel
@@ -565,11 +590,6 @@ export function ProfilePage() {
           </Panel>
           <Panel title="내 경력 기본 정보">
             <div className="form-grid">
-              <TextInput
-                label="이름"
-                value={profile.name}
-                onChange={(e) => set("name", e.target.value)}
-              />
               <TextInput
                 label="현재 직무"
                 placeholder="예: 백엔드 개발자"
@@ -860,12 +880,18 @@ export function DiscoverPage() {
                 <h3>{job.title}</h3>
                 <p>{job.description}</p>
                 <div className="tag-row">
-                  {job.skills.slice(0, 5).map((s) => (
+                  {(job.skills || []).slice(0, 5).map((s) => (
                     <span className="skill-tag" key={s.name}>
                       {s.name}
                     </span>
                   ))}
                 </div>
+                {!job.skills?.length && (
+                  <p className="helper">
+                    공공 원천에 역량 수준이 제공되지 않은 직무입니다. 분석에는
+                    별도 검토·게시된 내부 매핑이 필요합니다.
+                  </p>
+                )}
                 <SourceTag source={job.source} />
               </div>
               <Button
@@ -979,6 +1005,10 @@ function useSimulation() {
 function GapChart({ sim }: { sim: Simulation }) {
   return (
     <div className="gap-chart">
+      <p className="helper">
+        표시한 0~5 수준은 내부 시뮬레이션 기준이며, 공공 API가 제공하는 공식 NCS
+        수준을 의미하지 않습니다.
+      </p>
       <div className="chart-legend">
         <span>
           <i className="legend-current" />
@@ -1728,8 +1758,19 @@ export function OpportunitiesPage() {
                 </span>
               ))}
             </div>
+            {item.tuitionReference && (
+              <p className="opportunity-meta">{item.tuitionReference}</p>
+            )}
             {item.cost !== undefined && (
-              <p className="opportunity-meta">교육비 {number(item.cost)}원</p>
+              <p className="opportunity-meta">
+                훈련비 원문 {number(item.cost)}원
+                {item.source?.kind === "public_api" && (
+                  <small className="block">
+                    표시된 훈련비는 개인별 자비부담액이 아닙니다. 지원 조건과
+                    실제 부담액은 원문에서 확인하세요.
+                  </small>
+                )}
+              </p>
             )}
             {item.salary && (
               <p className="opportunity-meta">급여 {item.salary}</p>
@@ -1737,6 +1778,28 @@ export function OpportunitiesPage() {
             {item.deadline && (
               <p className="opportunity-meta">마감 {item.deadline}</p>
             )}
+            <div className="opportunity-codes">
+              {item.courseId && <span>과정 코드 {item.courseId}</span>}
+              {item.courseRound && <span>회차 {item.courseRound}</span>}
+              {(item.startDate || item.endDate) && (
+                <span>
+                  훈련 기간 {item.startDate || "미제공"} ~{" "}
+                  {item.endDate || "미제공"}
+                </span>
+              )}
+              {item.occupationCode && (
+                <span>직종 코드 {item.occupationCode}</span>
+              )}
+              {item.ncsCode && <span>NCS 코드 {item.ncsCode}</span>}
+            </div>
+            {item.source?.kind === "public_api" &&
+              !(item.skills || []).length && (
+                <p className="helper">
+                  원천 API가 제공하지 않는 기술 수준은 임의로 생성하지 않습니다.
+                  기술 목록과 분석 수준은 별도 검토된 가공 데이터가 있을 때
+                  구분하여 제공합니다.
+                </p>
+              )}
             <SourceTag source={item.source} />
             {item.url && (
               <Button
@@ -1848,6 +1911,7 @@ export function SavedPage() {
               </span>
             </div>
             <p>{sim.explanation}</p>
+            <SourceTag source={sim.source || sim.job.source} />
             <small className="muted">
               {sim.createdAt
                 ? new Date(sim.createdAt).toLocaleString("ko-KR")
@@ -2485,6 +2549,17 @@ export function APIPage() {
         title="NextRole를 나의 도구와 연결"
         description="REST API와 MCP를 통해 경력 분석, 직무 검색, 시뮬레이션을 외부 도구에서 활용하세요."
       />
+      <Alert
+        color="teal"
+        title="개인 경력 처리는 현재 안내에 동의한 뒤 이용하세요"
+        mb="lg"
+      >
+        웹의 <Link to="/privacy">개인정보·동의</Link> 메뉴에서 안내를 읽고 직접
+        동의하세요. API 클라이언트는 GET /api/v1/privacy로 안내·버전을 확인한
+        뒤, 이용자의 명시적 동의에 따라 POST /api/v1/privacy/consent에 version과
+        accepted: true를 전송합니다. 동의 기록 API에는 profile:write 권한이
+        필요합니다. 안내 버전이 변경되면 다시 동의해야 합니다.
+      </Alert>
       <div className="two-col">
         <Panel title="REST API">
           <p>

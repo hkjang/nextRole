@@ -28,32 +28,55 @@ const (
 // management responses; Mask returns a response-safe copy. Params and Body must
 // not contain credentials: use APIKeyParam or AuthHeader instead.
 type Config struct {
-	ID          string            `json:"id"`
-	Name        string            `json:"name"`
-	Type        string            `json:"type"`
-	Enabled     bool              `json:"enabled"`
-	Endpoint    string            `json:"endpoint"`
-	APIKey      string            `json:"apiKey,omitempty"`
-	AuthHeader  string            `json:"authHeader,omitempty"`
-	APIKeyParam string            `json:"apiKeyParam,omitempty"`
-	Params      map[string]string `json:"params,omitempty"`
-	Method      string            `json:"method,omitempty"`
-	Body        string            `json:"body,omitempty"`
-	DSN         string            `json:"dsn,omitempty"`
-	Query       string            `json:"query,omitempty"`
-	RootPath    string            `json:"rootPath"`
-	Mapping     map[string]string `json:"mapping"`
-	Dataset     string            `json:"dataset"`
-	LastSync    string            `json:"lastSync,omitempty"`
-	LastError   string            `json:"lastError,omitempty"`
-	HasAPIKey   bool              `json:"hasApiKey,omitempty"`
-	HasDSN      bool              `json:"hasDsn,omitempty"`
+	ID             string            `json:"id"`
+	Name           string            `json:"name"`
+	Type           string            `json:"type"`
+	Enabled        bool              `json:"enabled"`
+	Endpoint       string            `json:"endpoint"`
+	APIKey         string            `json:"apiKey,omitempty"`
+	AuthHeader     string            `json:"authHeader,omitempty"`
+	APIKeyParam    string            `json:"apiKeyParam,omitempty"`
+	Params         map[string]string `json:"params,omitempty"`
+	Method         string            `json:"method,omitempty"`
+	Body           string            `json:"body,omitempty"`
+	DSN            string            `json:"dsn,omitempty"`
+	Query          string            `json:"query,omitempty"`
+	RootPath       string            `json:"rootPath"`
+	Mapping        map[string]string `json:"mapping"`
+	Dataset        string            `json:"dataset"`
+	PresetID       string            `json:"presetId,omitempty"`
+	SelectedFields []string          `json:"selectedFields,omitempty"`
+	LastSync       string            `json:"lastSync,omitempty"`
+	LastError      string            `json:"lastError,omitempty"`
+	HasAPIKey      bool              `json:"hasApiKey,omitempty"`
+	HasDSN         bool              `json:"hasDsn,omitempty"`
 }
 
 func (c Config) Mask() Config {
 	c.HasAPIKey = c.APIKey != ""
 	c.HasDSN = c.DSN != ""
 	c.APIKey, c.DSN = "", ""
+	if Work24PresetID(c) != "" {
+		// Earlier versions allowed generic query configuration. Never expose a
+		// legacy authKey from those fields in an administration response.
+		params := map[string]string{}
+		for k, v := range c.Params {
+			if !strings.EqualFold(k, "authKey") {
+				params[k] = v
+			}
+		}
+		c.Params = params
+		if u, err := url.Parse(c.Endpoint); err == nil {
+			q := u.Query()
+			for k := range q {
+				if strings.EqualFold(k, "authKey") {
+					q.Del(k)
+				}
+			}
+			u.RawQuery = q.Encode()
+			c.Endpoint = u.String()
+		}
+	}
 	return c
 }
 
@@ -61,9 +84,12 @@ func (c Config) Mask() Config {
 // may run a disabled connector so administrators can test it before enabling it.
 func Validate(c Config) error {
 	switch c.Dataset {
-	case "jobs", "training", "occupations":
+	case "jobs", "training", "occupations", "occupation_details", "ncs_units":
 	default:
-		return errors.New("데이터 종류는 jobs, training, occupations 중 선택하세요")
+		return errors.New("데이터 종류는 jobs, training, occupations, occupation_details, ncs_units 중 선택하세요")
+	}
+	if err := validateWork24Config(c); err != nil {
+		return err
 	}
 	if len(c.Mapping) > 200 {
 		return errors.New("필드 매핑은 200개까지 설정할 수 있습니다")
@@ -117,6 +143,9 @@ func Fetch(ctx context.Context, c Config) ([]map[string]any, error) {
 	if err := Validate(c); err != nil {
 		return nil, err
 	}
+	if Work24PresetID(c) != "" && strings.TrimSpace(c.APIKey) == "" {
+		return nil, errors.New("고용24 승인 인증키를 관리자 API 키 필드에 입력하세요. 실제 API 조회를 실행하지 않았습니다")
+	}
 	ctx, cancel := context.WithTimeout(ctx, FetchTimeout)
 	defer cancel()
 	var records []map[string]any
@@ -156,6 +185,12 @@ func fetchHTTP(ctx context.Context, c Config) ([]map[string]any, error) {
 	u, _ := endpointURL(c.Endpoint) // validated by Fetch
 	q := u.Query()
 	for key, value := range c.Params {
+		if Work24PresetID(c) != "" && strings.TrimSpace(value) == "" {
+			// Work24 defines an omitted optional parameter as "all". An empty
+			// query value is not the documented form, especially for regions/NCS.
+			q.Del(key)
+			continue
+		}
 		q.Set(key, value)
 	}
 	if c.APIKey != "" && c.APIKeyParam != "" {
@@ -236,6 +271,9 @@ func fetchHTTP(ctx context.Context, c Config) ([]map[string]any, error) {
 	}
 	if err := upstreamError(root); err != nil {
 		return nil, err
+	}
+	if preset := Work24PresetID(c); preset != "" {
+		return work24Records(root, preset)
 	}
 	path, _ := pathSegments(c.RootPath)
 	selected, ok := lookup(root, path)
@@ -321,6 +359,10 @@ func upstreamError(root any) error {
 		case "error", "errors", "errorreport":
 			if value != nil && value != "" {
 				return errors.New("연동 API가 오류 응답을 반환했습니다. 인증키와 요청 조건을 확인하세요")
+			}
+		case "message_cd":
+			if value != nil && value != "" {
+				return errors.New("연동 API가 실패 응답을 반환했습니다. 인증키와 요청 조건을 확인하세요")
 			}
 		case "resultcode", "errorcode":
 			code := fmt.Sprint(value)
