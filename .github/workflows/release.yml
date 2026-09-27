@@ -1,0 +1,63 @@
+name: Release offline Docker image
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:17-bookworm@sha256:639ab7ceb90e13123085b741fb31ef493fba25463002f6da665352e7b534b652
+        env:
+          POSTGRES_DB: nextrole_test
+          POSTGRES_USER: nextrole_test
+          POSTGRES_PASSWORD: nextrole-ci-disposable
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U nextrole_test -d nextrole_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: '1.26.8'
+          cache-dependency-path: go.sum
+      - name: PDF 추출 도구 설치
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - name: 릴리스 코드 검증
+        env:
+          TEST_POSTGRES_DSN: postgres://nextrole_test:nextrole-ci-disposable@127.0.0.1:5432/nextrole_test?sslmode=disable
+        run: |
+          go test -race ./...
+          go vet ./...
+      - name: 이미지 빌드·오프라인 검증·tar.gz 생성
+        env:
+          NEXTROLE_RELEASE_TAG: ${{ github.ref_name }}
+        run: bash scripts/release.sh "$NEXTROLE_RELEASE_TAG"
+      - name: 서비스 이미지 하나만 GitHub Release에 게시
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NEXTROLE_RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          nextrole_asset="dist/nextrole-${NEXTROLE_RELEASE_TAG}.tar.gz"
+          test -s "$nextrole_asset"
+          if gh release view "$NEXTROLE_RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$NEXTROLE_RELEASE_TAG" "$nextrole_asset" --clobber
+            gh release edit "$NEXTROLE_RELEASE_TAG" --notes-file dist/release-notes.md
+          else
+            gh release create "$NEXTROLE_RELEASE_TAG" "$nextrole_asset" \
+              --verify-tag --title "NextRole $NEXTROLE_RELEASE_TAG" \
+              --notes-file dist/release-notes.md
+          fi

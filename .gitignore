@@ -1,0 +1,12 @@
+.env
+node_modules/
+web/dist/
+bin/
+artifacts/
+dist/
+test-results/
+playwright-report/
+*.log
+*.tmp
+*.tsbuildinfo
+.DS_Store

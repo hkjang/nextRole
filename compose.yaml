@@ -1,0 +1,26 @@
+name: nextrole
+services:
+  nextrole:
+    image: nextrole:v1.0.0
+    pull_policy: never
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_DSN: ${POSTGRES_DSN:?POSTGRES_DSN을 설정하세요}
+      BOOTSTRAP_ADMIN: ${BOOTSTRAP_ADMIN:?BOOTSTRAP_ADMIN을 설정하세요}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:?BOOTSTRAP_ADMIN_PASSWORD를 설정하세요}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY를 설정하세요}
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777,noexec,nosuid
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
